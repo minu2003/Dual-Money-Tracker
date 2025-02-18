@@ -20,6 +20,11 @@ class RecentTransactions extends StatelessWidget {
         }
 
         final transactions = snapshot.data!.docs;
+
+        if (transactions.isEmpty) {
+          return Center(child: Text("No recent transactions"));
+        }
+
         double balance = 0.0;
 
         List<Map<String,dynamic>> transactionsList = transactions.map((doc){
@@ -32,9 +37,11 @@ class RecentTransactions extends StatelessWidget {
           };
         }).toList();
 
-        transactionsList.sort((a, b) => a['date'].compareTo(b['date']));
+        transactionsList.sort((a, b) => b['date'].compareTo(a['date']));
 
-        for (var transaction in transactionsList) {
+        final recentTransactions = transactionsList.take(4).toList();
+
+        for (var transaction in recentTransactions.reversed) {
           balance += transaction['type'] == 'income' ? transaction['amount'] : -transaction['amount'];
           transaction['balance'] = balance;
         }
@@ -42,11 +49,10 @@ class RecentTransactions extends StatelessWidget {
         return ListView.builder(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
-          itemCount: transactions.length,
+          itemCount: recentTransactions.length,
           itemBuilder: (context, index) {
-            final transaction = transactions[index].data() as Map<String, dynamic>;
-            final date = (transaction['date'] as Timestamp).toDate();
-            final formattedDate = DateFormat("MMMM d, yyyy h:mm a").format(date);
+            final transaction = recentTransactions[index];
+            final formattedDate = DateFormat("MMMM d, yyyy h:mm a").format(transaction['date']);
 
             return Container(
               margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),

@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:money_app/components/appbar.dart';
+import '../../../Provider/firestore_services.dart';
 import '../../../components/bottom_navbar.dart';
 import 'expense_add.dart';
 import 'income_add.dart';
@@ -13,8 +16,11 @@ class income_expense extends StatefulWidget {
 }
 
 class _income_expenseState extends State<income_expense> with SingleTickerProviderStateMixin{
+  final FirestoreService _firestoreService = FirestoreService();
   late TabController _tabController;
   String currentAccount = 'personal';
+  String selectedIncomeCategory = "All";
+  String selectedExpenseCategory = "All";
 
   void handleAccountChange(String account){
     setState(() {
@@ -46,13 +52,21 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
     {"label": "Savings", "color": Colors.lightBlue, "icon": Icons.savings},
   ];
   final List<Map<String, dynamic>> expenses = [
-    {"label": "Health", "color": Colors.lightBlue, "icon": Icons.local_hospital},
+    {"label": "All", "color": Colors.lightBlue, "icon": Icons.wallet},
+    {"label": "Gas Filling", "color": Colors.lightBlue, "icon": Icons.local_gas_station},
     {"label": "Car", "color": Colors.lightBlue, "icon": Icons.directions_car},
     {"label": "Grocery", "color": Colors.lightBlue, "icon": Icons.shopping_cart},
+    {"label": "Dine In", "color": Colors.lightBlue, "icon": Icons.fastfood},
     {"label": "Bill", "color": Colors.lightBlue, "icon": Icons.receipt},
     {"label": "Communication", "color": Colors.lightBlue, "icon": Icons.phone},
+    {"label": "Travel", "color": Colors.lightBlue, "icon": Icons.flight},
+    {"label": "Health", "color": Colors.lightBlue, "icon": Icons.local_hospital},
+    {"label": "Entertainment", "color": Colors.lightBlue, "icon": Icons.tv},
     {"label": "House", "color": Colors.lightBlue, "icon": Icons.home},
     {"label": "Gift", "color": Colors.lightBlue, "icon": Icons.card_giftcard},
+    {"label": "Loan", "color": Colors.lightBlue, "icon": Icons.money},
+    {"label": "Cloths", "color": Colors.lightBlue, "icon": Icons.checkroom},
+    {"label": "Others", "color": Colors.lightBlue, "icon": Icons.category},
   ];
 
   @override
@@ -76,54 +90,10 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
               child: TabBarView(
                 controller: _tabController,
                 children: [
-                  //income
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 60,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: incomes.length,
-                          itemBuilder: (context, index) {
-                            final income = incomes[index];
-                            return Container(
-                              margin: const EdgeInsets.all(8.0),
-                              child: IncomeExpenseChip(
-                                label: income['label'],
-                                color: income['color'],
-                                icon: income['icon'],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  //expense
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 60,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: expenses.length,
-                          itemBuilder: (context, index) {
-                            final expense = expenses[index];
-                            return Container(
-                              margin: const EdgeInsets.all(8.0),
-                              child: IncomeExpenseChip(
-                                label: expense['label'],
-                                color: expense['color'],
-                                icon: expense['icon'],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+                  buildTransactionList("income", selectedIncomeCategory, incomes,
+                          (category) => setState(() => selectedIncomeCategory = category)),
+                  buildTransactionList("expense", selectedExpenseCategory, expenses,
+                          (category) => setState(() => selectedExpenseCategory = category)),
                 ],
               ),
             ),
@@ -170,33 +140,124 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
       ),
     );
   }
-}
-class IncomeExpenseChip extends StatelessWidget {
-  final String label;
-  final Color color;
-  final IconData icon;
+  Widget buildTransactionList(String type, String selectedCategory,
+      List<Map<String, dynamic>> categories, Function(String) onCategoryTap) {
+    return Column(
+      children: [
+        SizedBox(height: 10),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: categories.map((category) {
+              return GestureDetector(
+                onTap: () => onCategoryTap(category["label"]),
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 5),
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: selectedCategory == category["label"]
+                        ? Colors.blueAccent
+                        : Colors.grey[200],
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(category["icon"], size: 20, color: Colors.white),
+                      SizedBox(width: 5),
+                      Text(category["label"], style: TextStyle(color: Colors.white)),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+        Expanded(
+          child: StreamBuilder<QuerySnapshot>(
+            stream: _firestoreService.getTransactions(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError) {
+                return Center(child: Text("Error: ${snapshot.error}"));
+              }
 
-  const IncomeExpenseChip({
-    super.key,
-    required this.label,
-    required this.color,
-    required this.icon,
-  });
+              final transactions = snapshot.data!.docs.where((doc) {
+                final data = doc.data() as Map<String, dynamic>;
+                return data['type'] == type &&
+                    (selectedCategory == "All" || data['category'] == selectedCategory);
+              }).toList();
 
-  @override
-  Widget build(BuildContext context) {
-    return Chip(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      avatar: Icon(icon, color: Colors.white, size: 18),
-      label: Text(
-        label,
-        style: const TextStyle(color: Colors.white),
-      ),
-      backgroundColor: color,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+              return ListView.builder(
+                itemCount: transactions.length,
+                itemBuilder: (context, index) {
+                  final transaction = transactions[index].data() as Map<String, dynamic>;
+                  final date = (transaction['date'] as Timestamp).toDate();
+                  final formattedDate =
+                  DateFormat("MMMM d, yyyy h:mm a").format(date);
+
+                  return Container(
+                    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    padding: EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 5,
+                          spreadRadius: 1,
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: type == 'income'
+                                  ? Colors.green.withOpacity(0.1)
+                                  : Colors.red.withOpacity(0.1),
+                              child: Icon(
+                                type == 'income'
+                                    ? Icons.arrow_upward
+                                    : Icons.arrow_downward,
+                                color: type == 'income' ? Colors.green : Colors.red,
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(transaction['title'],
+                                    style: TextStyle(fontWeight: FontWeight.bold)),
+                                SizedBox(height: 5),
+                                Text(formattedDate,
+                                    style: TextStyle(color: Colors.grey, fontSize: 12)),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Text(
+                          "${type == 'expense' ? '-' : '+'} LKR ${(transaction['amount'] ?? 0.0).toStringAsFixed(2)}",
+                          style: TextStyle(
+                            color: type == 'expense' ? Colors.red : Colors.green,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
+
 
