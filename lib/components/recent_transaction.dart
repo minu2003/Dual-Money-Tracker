@@ -34,85 +34,84 @@ class RecentTransactions extends StatelessWidget {
             'amount': data['amount'],
             'type': data['type'],
             'date': (data['date'] as Timestamp).toDate(),
+            'balance': data['balance'],
           };
         }).toList();
 
         transactionsList.sort((a, b) => b['date'].compareTo(a['date']));
 
-        final recentTransactions = transactionsList.take(4).toList();
+        final recentTransactions = transactionsList.take(10).toList();
 
-        for (var transaction in recentTransactions.reversed) {
-          balance += transaction['type'] == 'income' ? transaction['amount'] : -transaction['amount'];
-          transaction['balance'] = balance;
+        for (var transaction in recentTransactions) {
+          transaction['balance'] = transaction['balance'];
         }
 
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: recentTransactions.length,
-          itemBuilder: (context, index) {
-            final transaction = recentTransactions[index];
-            final formattedDate = DateFormat("MMMM d, yyyy h:mm a").format(transaction['date']);
+        return Expanded(  // Ensures it takes available space inside a Column or Flexible widget
+          child: SingleChildScrollView(
+            child: Column(
+              children: recentTransactions.map((transaction) {
+                final formattedDate = DateFormat("MMMM d, yyyy h:mm a").format(transaction['date']);
 
-            return Container(
-              margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              padding: EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 5,
-                    spreadRadius: 1,
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: transaction['type'] == 'income' ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
-                        child: Icon(
-                          transaction['type'] == 'income' ? Icons.arrow_upward : Icons.arrow_downward,
-                          color: transaction['type'] == 'income' ? Colors.green : Colors.red,
-                        ),
+                return Container(
+                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  padding: EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 5,
+                        spreadRadius: 1,
                       ),
-                      SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
                         children: [
-                          Text(transaction['title'], style: TextStyle(fontWeight: FontWeight.bold)),
+                          CircleAvatar(
+                            backgroundColor: transaction['type'] == 'income' ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+                            child: Icon(
+                              transaction['type'] == 'income' ? Icons.arrow_upward : Icons.arrow_downward,
+                              color: transaction['type'] == 'income' ? Colors.green : Colors.red,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(transaction['title'], style: TextStyle(fontWeight: FontWeight.bold)),
+                              SizedBox(height: 5),
+                              Text(formattedDate, style: TextStyle(color: Colors.grey, fontSize: 12)),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            "${transaction['amount'] < 0 ? '-' : '+'} LKR ${(transaction['amount'] ?? 0.0).abs().toStringAsFixed(2)}",
+                            style: TextStyle(
+                              color: transaction['amount'] < 0 ? Colors.red : Colors.green,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           SizedBox(height: 5),
-                          Text(formattedDate, style: TextStyle(color: Colors.grey, fontSize: 12)),
+                          Text(
+                            "LKR ${(transaction['balance'] ?? 0.0).toStringAsFixed(2)}",
+                            style: TextStyle(color: Colors.grey, fontSize: 12),
+                          ),
                         ],
                       ),
                     ],
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        "${transaction['amount'] < 0 ? '-' : '+'} LKR ${(transaction['amount'] ?? 0.0).abs().toStringAsFixed(2)}",
-                        style: TextStyle(
-                          color: transaction['amount'] < 0 ? Colors.red : Colors.green,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        "LKR ${(transaction['balance']?? 0.0).toStringAsFixed(2)}",
-                        style: TextStyle(color: Colors.grey, fontSize: 12),
-                      ),
-
-                    ],
-                  ),
-                ],
-              ),
-            );
-          },
+                );
+              }).toList(),
+            ),
+          ),
         );
       },
     );
