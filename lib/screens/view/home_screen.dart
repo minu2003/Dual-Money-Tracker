@@ -208,7 +208,7 @@ class _DropdownExampleState extends State<DropdownExample> {
                             ),
                           ],
                         ),
-                        SizedBox(width: 27,),
+                        Spacer(),
                         Column(
                           children: [
                             CircleAvatar(

@@ -9,7 +9,7 @@ void showAddExpenseDialog (BuildContext context){
   final TextEditingController amountController = TextEditingController();
 
   final List<Map<String, dynamic>> categories = [
-    {"icon": Icons.local_gas_station, "label": "Gass Filling"},
+    {"icon": Icons.local_gas_station, "label": "Gas-Filling"},
     {"icon": Icons.directions_car, "label": "Car"},
     {"icon": Icons.shopping_cart, "label": "Grocery"},
     {"icon": Icons.fastfood, "label": "Dine In"},

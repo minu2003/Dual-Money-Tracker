@@ -53,7 +53,7 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
   ];
   final List<Map<String, dynamic>> expenses = [
     {"label": "All", "color": Colors.lightBlue, "icon": Icons.wallet},
-    {"label": "Gas Filling", "color": Colors.lightBlue, "icon": Icons.local_gas_station},
+    {"label": "Gas-Filling", "color": Colors.lightBlue, "icon": Icons.local_gas_station},
     {"label": "Car", "color": Colors.lightBlue, "icon": Icons.directions_car},
     {"label": "Grocery", "color": Colors.lightBlue, "icon": Icons.shopping_cart},
     {"label": "Dine In", "color": Colors.lightBlue, "icon": Icons.fastfood},
