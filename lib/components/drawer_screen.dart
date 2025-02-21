@@ -16,28 +16,41 @@ class DrawerScreen extends StatefulWidget {
 class _DrawerScreenState extends State<DrawerScreen> {
   String? selectedMonthWithYear;
   String? selectedAccount = "Cash";
-  String? selectedMonth;
-  String? selectedYear;
-  bool isMonthDropdownVisible = false;
-  bool isYearDropdownVisible = false;
+  DateTime? selectedDate;
 
-  final List<String> months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
-  final List<String> years = [
-    "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030"
-  ];
-
-  void updateMonthWithYear() {
-    if (selectedMonth != null && selectedYear != null) {
-      selectedMonthWithYear = "$selectedMonth $selectedYear";
-      } else if (selectedMonth != null) {
-      selectedMonthWithYear = selectedMonth;
-      } else {
-      selectedMonthWithYear = null;
-      }
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            // Customize colors here
+            colorScheme: ColorScheme.light(
+              primary: Colors.blue, // header background color
+              onPrimary: Colors.white, // header text color
+              onSurface: Colors.black, // body text color
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.blue, // button text color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
   }
+
+
 
   Future<void> _logout(BuildContext context) async{
     await FirebaseAuth.instance.signOut();
@@ -52,7 +65,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
       var userData = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
       return userData.data()?['username'] ?? "User";
     }
-    return "User";  // Return default if no user
+    return "User";
   }
 
 
@@ -79,7 +92,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 3,),
                   const Text("Welcome!"),
+                  SizedBox(height: 3,),
                   FutureBuilder<String>(
                     future: _getUserName(),
                     builder: (context, snapshot) {
@@ -156,74 +171,15 @@ class _DrawerScreenState extends State<DrawerScreen> {
                         ],
                       ),
                       const SizedBox(height: 20),
-
                       ListTile(
-                        leading: const Icon(Icons.calendar_month),
-                        title: const Text("Year"),
-                        onTap: () {
-                          setState(() {
-                            isYearDropdownVisible = !isYearDropdownVisible; // Toggle dropdown visibility
-                          });
-                        },
-                      ),
-                      if (isYearDropdownVisible) // Show dropdown when flag is true
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 18),
-                          child: DropdownButton<String>(
-                            isExpanded: true,
-                            hint: const Text("Select Year"),
-                            value: selectedYear,
-                            underline: Container(),
-                            items: years
-                                .map((year) => DropdownMenuItem(
-                              value: year,
-                              child: Text(year),
-                            ))
-                                .toList(),
-                            onChanged: (String? newYear) {
-                              setState(() {
-                                selectedYear = newYear;
-                                isYearDropdownVisible = false;
-                                updateMonthWithYear();
-                              });
-                            },
-                          ),
+                        leading: const Icon(Icons.calendar_today),
+                        title: Text(
+                          selectedDate != null
+                              ? "${selectedDate!.toLocal()}".split(' ')[0]
+                              : "Select Date",
                         ),
-                      ListTile(
-                        leading: const Icon(Icons.calendar_month),
-                        title: Text("Month"),
-                        onTap: () {
-                          setState(() {
-                            isMonthDropdownVisible = !isMonthDropdownVisible;
-                          });
-                        },
+                        onTap: () => _selectDate(context),
                       ),
-                      if (isMonthDropdownVisible)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 18),
-                          child: DropdownButton<String>(
-                            isExpanded: true,
-                            hint: const Text("Select Month"),
-                            value: selectedMonthWithYear,
-                            underline: Container(),
-                            items: months
-                                .map((month) {
-                              final combined = selectedYear != null
-                                  ? "$month $selectedYear"
-                                  : month;
-                              return DropdownMenuItem(
-                                value: combined,
-                                child: Text(combined),
-                              );
-                            })
-                                .toList(),
-                            onChanged: (String? newMonthWithYear) {
-                              setState(() {
-                                selectedMonthWithYear = newMonthWithYear;
-                              });
-                            },
-                          ),
-                        ),
 
                     ],
                   ),
@@ -249,9 +205,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
   List<DropdownMenuItem<String>> _getDropdownItems(String currency) {
     return [
-      _buildDropdownItem("All Accounts", Icons.sell_outlined, Colors.orange, currency),
       _buildDropdownItem("Cash", Icons.money, Colors.green, currency),
       _buildDropdownItem("Payment Card", Icons.credit_card, Colors.red, currency),
+      _buildDropdownItem("Check", Icons.sell_outlined, Colors.orange, currency),
     ];
   }
 
