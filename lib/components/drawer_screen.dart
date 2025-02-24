@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:money_app/Authentication/sign_in.dart';
+import 'package:money_app/components/selectDate.dart';
 import 'package:money_app/screens/view/home_screen.dart';
 import 'package:money_app/screens/view/settings.dart' as settings_screen;
 import 'currency_provider.dart';
@@ -27,15 +28,14 @@ class _DrawerScreenState extends State<DrawerScreen> {
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            // Customize colors here
             colorScheme: ColorScheme.light(
-              primary: Colors.blue, // header background color
-              onPrimary: Colors.white, // header text color
-              onSurface: Colors.black, // body text color
+              primary: Colors.blue,
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                foregroundColor: Colors.blue, // button text color
+                foregroundColor: Colors.blue,
               ),
             ),
           ),
@@ -173,10 +173,15 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       const SizedBox(height: 20),
                       ListTile(
                         leading: const Icon(Icons.calendar_today),
+                        title: const Text("Select Period"),
+                        onTap: () => DateProvider.showDateDialog(context),
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.edit_calendar),
                         title: Text(
                           selectedDate != null
                               ? "${selectedDate!.toLocal()}".split(' ')[0]
-                              : "Select Date",
+                              : "Choose Date",
                         ),
                         onTap: () => _selectDate(context),
                       ),
