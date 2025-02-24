@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:money_app/components/drawer_screen.dart';
 import 'package:money_app/components/recent_transaction.dart';
@@ -40,7 +41,17 @@ class _DropdownExampleState extends State<DropdownExample> {
   }
 
   void fetchFinancialSummary() {
-    FirebaseFirestore.instance.collection('transactions').snapshots().listen((snapshot) {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return;
+    }
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('personal_transactions')
+        .snapshots()
+        .listen((snapshot) {
       double income = 0.0;
       double expenses = 0.0;
 
