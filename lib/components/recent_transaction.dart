@@ -25,8 +25,6 @@ class RecentTransactions extends StatelessWidget {
           return Center(child: Text("No recent transactions"));
         }
 
-        double balance = 0.0;
-
         List<Map<String,dynamic>> transactionsList = transactions.map((doc){
           final data = doc.data() as Map<String, dynamic>;
           return{
@@ -46,7 +44,7 @@ class RecentTransactions extends StatelessWidget {
           transaction['balance'] = transaction['balance'];
         }
 
-        return Expanded(  // Ensures it takes available space inside a Column or Flexible widget
+        return Expanded(
           child: SingleChildScrollView(
             child: Column(
               children: recentTransactions.map((transaction) {

@@ -207,7 +207,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
     return [
       _buildDropdownItem("Cash", Icons.money, Colors.green, currency),
       _buildDropdownItem("Payment Card", Icons.credit_card, Colors.red, currency),
-      _buildDropdownItem("Check", Icons.sell_outlined, Colors.orange, currency),
+      _buildDropdownItem("Checks", Icons.sell_outlined, Colors.orange, currency),
     ];
   }
 

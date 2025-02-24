@@ -37,9 +37,9 @@ class _edit_profileState extends State<edit_profile> {
       setState(() {
         userName = userdata.data()?['username'] ?? "User";
         userEmail = userdata.data()?['email'] ?? user.email ?? "No Email Found";
-        // Fetch the account creation date
+
         DateTime joinDate = user.metadata.creationTime ?? DateTime.now();
-        // Format the date as needed
+
         joinDateFormatted = "${joinDate.month}/${joinDate.day}/${joinDate.year}";
       });
     }
@@ -106,7 +106,7 @@ class _edit_profileState extends State<edit_profile> {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      userName, // Also display the retrieved name here
+                      userName,
                       style: const TextStyle(fontSize: 16, color: Colors.black87),
                     ),
                     const SizedBox(height: 20),
