@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 import '../Provider/firestore_services.dart';
 import 'package:intl/intl.dart';
+
+import 'currency_provider.dart';
 
 class RecentTransactions extends StatelessWidget {
   final FirestoreService _firestoreService = FirestoreService();
 
   @override
   Widget build(BuildContext context) {
+    final currency = Provider.of<CurrencyProvider>(context).currency;
     return StreamBuilder<QuerySnapshot>(
       stream: _firestoreService.getTransactions(),
       builder: (context, snapshot) {
@@ -91,7 +95,7 @@ class RecentTransactions extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            "${transaction['amount'] < 0 ? '-' : '+'} LKR ${(transaction['amount'] ?? 0.0).abs().toStringAsFixed(2)}",
+                            "${transaction['amount'] < 0 ? '-' : '+'} $currency ${(transaction['amount'] ?? 0.0).abs().toStringAsFixed(2)}",
                             style: TextStyle(
                               color: transaction['amount'] < 0 ? Colors.red : Colors.green,
                               fontWeight: FontWeight.bold,
@@ -99,7 +103,7 @@ class RecentTransactions extends StatelessWidget {
                           ),
                           SizedBox(height: 5),
                           Text(
-                            "LKR ${(transaction['balance'] ?? 0.0).toStringAsFixed(2)}",
+                            "$currency ${(transaction['balance'] ?? 0.0).toStringAsFixed(2)}",
                             style: TextStyle(color: Colors.grey, fontSize: 12),
                           ),
                         ],

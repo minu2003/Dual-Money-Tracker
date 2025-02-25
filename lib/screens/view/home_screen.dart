@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:money_app/components/drawer_screen.dart';
 import 'package:money_app/components/recent_transaction.dart';
 import 'package:money_app/screens/view/income_expense/income_expemses.dart';
+import 'package:provider/provider.dart';
 import '../../components/appbar.dart';
 import '../../components/bottom_navbar.dart';
+import '../../components/currency_provider.dart';
 import 'income_expense/expense_add.dart';
 import 'income_expense/income_add.dart';
 
@@ -83,6 +85,7 @@ class _DropdownExampleState extends State<DropdownExample> {
 
   @override
   Widget build(BuildContext context) {
+    final currency = Provider.of<CurrencyProvider>(context).currency;
     return Scaffold(
       drawer: const DrawerScreen(),
       appBar: CustomAppBar(onAccountChanged: handleAccountChange),
@@ -134,7 +137,7 @@ class _DropdownExampleState extends State<DropdownExample> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text("LKR",
+                        Text("$currency",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,

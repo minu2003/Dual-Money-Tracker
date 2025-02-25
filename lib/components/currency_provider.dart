@@ -1,33 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+class CurrencyProvider with ChangeNotifier {
+  String _currency = "LKR";
 
-final ValueNotifier<String> currencyNotifier = ValueNotifier<String>("LKR");
+  String get currency => _currency;
 
-void currencyProvider(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text("Select Currency"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildCurrencyOption(context, "LKR"),
-            _buildCurrencyOption(context, "USD"),
-            _buildCurrencyOption(context, "GBP"),
-          ],
-        ),
-      );
-    },
-  );
-}
+  Future<void> loadCurrency() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _currency = prefs.getString('currency') ?? "LKR";
+    notifyListeners();
+  }
 
-ListTile _buildCurrencyOption(BuildContext context, String currency) {
-  return ListTile(
-    title: Text(currency),
-    onTap: () {
-      currencyNotifier.value = currency;
-      Navigator.of(context).pop();
-    },
-  );
+  Future<void> setCurrency(String newCurrency) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('currency', newCurrency);
+    _currency = newCurrency;
+    notifyListeners();
+  }
 }

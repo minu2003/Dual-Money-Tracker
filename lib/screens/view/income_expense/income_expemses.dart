@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:money_app/components/appbar.dart';
+import 'package:provider/provider.dart';
 import '../../../Provider/firestore_services.dart';
 import '../../../components/bottom_navbar.dart';
+import '../../../components/currency_provider.dart';
 import 'expense_add.dart';
 import 'income_add.dart';
 
@@ -142,6 +144,7 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
   }
   Widget buildTransactionList(String type, String selectedCategory,
       List<Map<String, dynamic>> categories, Function(String) onCategoryTap) {
+    final currency = Provider.of<CurrencyProvider>(context).currency;
     return Column(
       children: [
         SizedBox(height: 10),
@@ -241,7 +244,7 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
                           ],
                         ),
                         Text(
-                          "${type == 'expense' ? '-' : '+'} LKR ${(transaction['amount'] ?? 0.0).toStringAsFixed(2)}",
+                          "${type == 'expense' ? '-' : '+'} $currency ${(transaction['amount'] ?? 0.0).toStringAsFixed(2)}",
                           style: TextStyle(
                             color: type == 'expense' ? Colors.red : Colors.green,
                             fontWeight: FontWeight.bold,

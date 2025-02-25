@@ -2,14 +2,25 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:money_app/Authentication/sign_in.dart';
 import 'package:money_app/screens/view/home_screen.dart';
+import 'package:provider/provider.dart';
+import 'components/currency_provider.dart';
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final currencyProvider = CurrencyProvider();
+  await currencyProvider.loadCurrency();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => CurrencyProvider()..loadCurrency()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
