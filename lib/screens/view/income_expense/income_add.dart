@@ -31,7 +31,7 @@ void showAddIncomeDialog (BuildContext context){
                   decoration: InputDecoration(
                     labelText: 'Title',
                     labelStyle: TextStyle(
-                      fontSize: 14
+                        fontSize: 14
                     ),
                     border: UnderlineInputBorder(),
                   ),
@@ -42,7 +42,7 @@ void showAddIncomeDialog (BuildContext context){
                   decoration: const InputDecoration(
                     labelText: 'Amount',
                     labelStyle: TextStyle(
-                      fontSize: 14
+                        fontSize: 14
                     ),
                     border: UnderlineInputBorder(),
                   ),
@@ -53,30 +53,30 @@ void showAddIncomeDialog (BuildContext context){
                   decoration: InputDecoration(
                     border: UnderlineInputBorder(),
                   ),
-                    value: selectedCategory,
-                    hint: Text("Select Category"),
-                    items: categories.map((category){
-                      return DropdownMenuItem<String>(
-                        value: category['label'],
-                          child: Row(
-                            children: [
-                              Icon(category['icon'], size: 20,),
-                              SizedBox(width: 10,),
-                              Text(category['label']),
-                            ],
-                          ),
-                      );
-                    }).toList(),
-                    onChanged: (value){
+                  value: selectedCategory,
+                  hint: Text("Select Category"),
+                  items: categories.map((category){
+                    return DropdownMenuItem<String>(
+                      value: category['label'],
+                      child: Row(
+                        children: [
+                          Icon(category['icon'], size: 20,),
+                          SizedBox(width: 10,),
+                          Text(category['label']),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (value){
                     selectedCategory = value;
-                    },
+                  },
                 ),
                 SizedBox(height: 20,),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)
+                          borderRadius: BorderRadius.circular(20)
                       ),
                     ),
                     onPressed: () async {
@@ -97,12 +97,12 @@ void showAddIncomeDialog (BuildContext context){
                       }
                     },
                     child: Text("Add Income",
-                    style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white),
                     ))
               ],
             ),
           ),
         );
       }
-      );
+  );
 }

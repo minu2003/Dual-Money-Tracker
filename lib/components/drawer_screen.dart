@@ -118,6 +118,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
   List<DropdownMenuItem<String>> _getDropdownItems(String currency) {
     return [
+      _buildDropdownItem("All Accounts", Icons.sell_outlined, Colors.orange, currency),
       _buildDropdownItem("Cash", Icons.money, Colors.green, currency),
       _buildDropdownItem("Payment Card", Icons.credit_card, Colors.red, currency),
     ];
