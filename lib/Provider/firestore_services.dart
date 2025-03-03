@@ -17,7 +17,8 @@ class FirestoreService {
   Future<void> addTransaction(Map<String, dynamic> transaction) async {
     try {
       CollectionReference transactionsCollection = _getUserTransactionsCollection();
-      await transactionsCollection.add(transaction);
+      String paymentMethod = transaction['paymentMethod'] ?? 'Cash';
+      await transactionsCollection.doc(paymentMethod).collection('transactions').add(transaction);
     } catch (e) {
       throw Exception('Failed to add transaction: $e');
     }

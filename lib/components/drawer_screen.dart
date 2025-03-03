@@ -6,6 +6,7 @@ import 'package:money_app/Authentication/sign_in.dart';
 import 'package:money_app/components/selectDate.dart';
 import 'package:money_app/screens/view/home_screen.dart';
 import 'package:money_app/screens/view/settings.dart' as settings_screen;
+import '../Provider/paymentMethod_provider.dart';
 import 'currency_provider.dart';
 
 class DrawerScreen extends StatefulWidget {
@@ -16,7 +17,6 @@ class DrawerScreen extends StatefulWidget {
 }
 
 class _DrawerScreenState extends State<DrawerScreen> {
-  String? selectedAccount = "Cash";
   DateTime? selectedDate;
 
   Future<void> _selectDate(BuildContext context) async {
@@ -77,19 +77,24 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 children: [
                   Consumer<CurrencyProvider>(
                     builder: (context, currencyProvider, _) {
-                      return DropdownButton<String>(
-                        isExpanded: true,
-                        value: selectedAccount,
-                        underline: Container(),
-                        items: _getDropdownItems(currencyProvider.currency),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedAccount = newValue;
-                          });
+                      return Consumer<PaymentMethodProvider>(
+                        builder: (context, paymentMethodProvider, _) {
+                          return DropdownButton<String>(
+                            isExpanded: true,
+                            value: paymentMethodProvider.selectedMethod,
+                            underline: Container(),
+                            items: _getDropdownItems(currencyProvider.currency),
+                            onChanged: (String? newValue) {
+                              if (newValue != null) {
+                                paymentMethodProvider.setPaymentMethod(newValue);
+                              }
+                            },
+                          );
                         },
                       );
                     },
                   ),
+
                   const SizedBox(height: 20),
                   _buildListTile(Icons.home, "Home", () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const HomeScreen()))),
                   _buildListTile(Icons.monetization_on, "Currency", () => _showCurrencyDialog(context)),

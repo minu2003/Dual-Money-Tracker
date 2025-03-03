@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../Provider/firestore_services.dart';
+import '../../../Provider/paymentMethod_provider.dart';
 
 final FirestoreService _firestoreService = FirestoreService();
 
@@ -24,6 +26,8 @@ void showAddExpenseDialog (BuildContext context){
     {"icon": Icons.checkroom, "label": "Cloths"},
     {"icon": Icons.category, "label": "Others"},
   ];
+
+  String selectedPaymentMethod = Provider.of<PaymentMethodProvider>(context, listen: false).selectedMethod;
 
   showDialog(
       context: context,
@@ -104,6 +108,7 @@ void showAddExpenseDialog (BuildContext context){
                           'date': DateTime.now(),
                           'type': 'expense',
                           'category': selectedCategory,
+                          'paymentMethod': selectedPaymentMethod,
                           'balance' : newBalance,
                         });
                         Navigator.pop(context);
