@@ -24,14 +24,25 @@ class FirestoreService {
     }
   }
 
-  Stream<QuerySnapshot> getTransactions() {
+  Stream<QuerySnapshot> getTransactions(String paymentMethod) {
     try {
       CollectionReference transactionsCollection = _getUserTransactionsCollection();
-      return transactionsCollection.orderBy('date', descending: false).snapshots();
+
+      if (paymentMethod == 'All Accounts') {
+        return transactionsCollection
+            .snapshots();
+      } else {
+        return transactionsCollection
+            .doc(paymentMethod)
+            .collection('transactions')
+            .orderBy('date', descending: true)
+            .snapshots();
+      }
     } catch (e) {
       throw Exception('Failed to get transactions: $e');
     }
   }
+
 
   Future<double> calculateNewBalance(double amount, String type) async {
     try {

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../Provider/firestore_services.dart';
 import 'package:intl/intl.dart';
 
+import '../Provider/paymentMethod_provider.dart';
 import 'currency_provider.dart';
 
 class RecentTransactions extends StatelessWidget {
@@ -12,8 +13,10 @@ class RecentTransactions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currency = Provider.of<CurrencyProvider>(context).currency;
+    final selectedPaymentMethod = Provider.of<PaymentMethodProvider>(context).selectedMethod;
+
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestoreService.getTransactions(),
+      stream: _firestoreService.getTransactions(selectedPaymentMethod),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());

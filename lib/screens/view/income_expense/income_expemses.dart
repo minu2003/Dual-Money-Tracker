@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:money_app/components/appbar.dart';
 import 'package:provider/provider.dart';
 import '../../../Provider/firestore_services.dart';
+import '../../../Provider/paymentMethod_provider.dart';
 import '../../../components/bottom_navbar.dart';
 import '../../../components/currency_provider.dart';
 import 'expense_add.dart';
@@ -145,6 +146,7 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
   Widget buildTransactionList(String type, String selectedCategory,
       List<Map<String, dynamic>> categories, Function(String) onCategoryTap) {
     final currency = Provider.of<CurrencyProvider>(context).currency;
+    final selectedPaymentMethod = Provider.of<PaymentMethodProvider>(context).selectedMethod;
     return Column(
       children: [
         SizedBox(height: 10),
@@ -177,7 +179,7 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
         ),
         Expanded(
           child: StreamBuilder<QuerySnapshot>(
-            stream: _firestoreService.getTransactions(),
+            stream: _firestoreService.getTransactions(selectedPaymentMethod),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());

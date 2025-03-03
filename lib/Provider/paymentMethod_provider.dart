@@ -2,20 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PaymentMethodProvider with ChangeNotifier {
-  String _selectedMethod = "Cash";
+  late String _selectedMethod;
 
   String get selectedMethod => _selectedMethod;
 
-  Future<void> loadPaymentMethod() async {
+  PaymentMethodProvider() {
+    _loadPaymentMethod(); // Load when provider is created
+  }
+
+  Future<void> _loadPaymentMethod() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _selectedMethod = prefs.getString('paymentMethod') ?? "Cash";
     notifyListeners();
   }
 
   Future<void> setPaymentMethod(String newMethod) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('paymentMethod', newMethod);
-    _selectedMethod = newMethod;
-    notifyListeners();
+    if (_selectedMethod != newMethod) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('paymentMethod', newMethod);
+      _selectedMethod = newMethod;
+      notifyListeners();
+    }
   }
 }
