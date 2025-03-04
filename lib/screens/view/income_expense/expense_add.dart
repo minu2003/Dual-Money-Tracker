@@ -100,7 +100,7 @@ void showAddExpenseDialog (BuildContext context){
                           selectedCategory != null) {
 
                         double amount = double.parse(amountController.text);
-                        double newBalance = await _firestoreService.calculateNewBalance(amount, 'expense');
+                        double newBalance = await _firestoreService.calculateNewBalance(amount, 'expense', selectedPaymentMethod);
 
                         await _firestoreService.addTransaction({
                           'title': titleController.text,

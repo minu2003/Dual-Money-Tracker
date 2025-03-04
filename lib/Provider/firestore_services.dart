@@ -44,9 +44,9 @@ class FirestoreService {
   }
 
 
-  Future<double> calculateNewBalance(double amount, String type) async {
+  Future<double> calculateNewBalance(double amount, String type, String paymentMethod) async {
     try {
-      CollectionReference transactionsCollection = _getUserTransactionsCollection();
+      CollectionReference transactionsCollection = _getUserTransactionsCollection().doc(paymentMethod).collection('transactions');
       QuerySnapshot snapshot = await transactionsCollection.orderBy('date', descending: true).limit(1).get();
 
       double lastBalance = 0.0;
@@ -61,11 +61,16 @@ class FirestoreService {
     }
   }
 
-  Future<Map<String, double>> getFinancialSummary() async {
+  Future<Map<String, double>> getFinancialSummary(String paymentMethod) async {
     try {
-      CollectionReference transactionsCollection = _getUserTransactionsCollection();
-      QuerySnapshot snapshot = await transactionsCollection.get();
+      CollectionReference transactionsCollection;
+      if (paymentMethod == 'All Accounts') {
+        transactionsCollection = _getUserTransactionsCollection();
+      } else {
+        transactionsCollection = _getUserTransactionsCollection().doc(paymentMethod).collection('transactions');
+      }
 
+      QuerySnapshot snapshot = await transactionsCollection.get();
       double totalIncome = 0.0;
       double totalExpenses = 0.0;
       double balance = 0.0;
