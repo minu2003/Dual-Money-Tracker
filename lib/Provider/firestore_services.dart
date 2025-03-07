@@ -5,10 +5,15 @@ class FirestoreService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  CollectionReference _getUserTransactionsCollection() {
+  CollectionReference _getUserTransactionsCollection(String paymentMethod) {
     User? user = _auth.currentUser;
     if (user != null) {
-      return _firestore.collection('users').doc(user.uid).collection('personal_transactions');
+      return _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('personal_transactions')
+          .doc(paymentMethod)
+          .collection('transactions');
     } else {
       throw Exception('No authenticated user found');
     }
@@ -16,9 +21,11 @@ class FirestoreService {
 
   Future<void> addTransaction(Map<String, dynamic> transaction) async {
     try {
-      CollectionReference transactionsCollection = _getUserTransactionsCollection();
       String paymentMethod = transaction['paymentMethod'] ?? 'Cash';
-      await transactionsCollection.doc(paymentMethod).collection('transactions').add(transaction);
+      CollectionReference transactionsCollection = _getUserTransactionsCollection(paymentMethod);
+
+      DocumentReference newTransaction = await transactionsCollection.add(transaction);
+      print("Transaction added: ${newTransaction.id}");
     } catch (e) {
       throw Exception('Failed to add transaction: $e');
     }
@@ -26,27 +33,17 @@ class FirestoreService {
 
   Stream<QuerySnapshot> getTransactions(String paymentMethod) {
     try {
-      CollectionReference transactionsCollection = _getUserTransactionsCollection();
-
-      if (paymentMethod == 'All Accounts') {
-        return transactionsCollection
-            .snapshots();
-      } else {
-        return transactionsCollection
-            .doc(paymentMethod)
-            .collection('transactions')
-            .orderBy('date', descending: true)
-            .snapshots();
-      }
+      return _getUserTransactionsCollection(paymentMethod)
+          .orderBy('date', descending: true)
+          .snapshots();
     } catch (e) {
       throw Exception('Failed to get transactions: $e');
     }
   }
 
-
   Future<double> calculateNewBalance(double amount, String type, String paymentMethod) async {
     try {
-      CollectionReference transactionsCollection = _getUserTransactionsCollection().doc(paymentMethod).collection('transactions');
+      CollectionReference transactionsCollection = _getUserTransactionsCollection(paymentMethod);
       QuerySnapshot snapshot = await transactionsCollection.orderBy('date', descending: true).limit(1).get();
 
       double lastBalance = 0.0;
@@ -61,38 +58,32 @@ class FirestoreService {
     }
   }
 
-  Future<Map<String, double>> getFinancialSummary(String paymentMethod) async {
+  Stream<Map<String, double>> getFinancialSummary(String paymentMethod) {
     try {
-      CollectionReference transactionsCollection;
-      if (paymentMethod == 'All Accounts') {
-        transactionsCollection = _getUserTransactionsCollection();
-      } else {
-        transactionsCollection = _getUserTransactionsCollection().doc(paymentMethod).collection('transactions');
-      }
+      CollectionReference transactionsCollection = _getUserTransactionsCollection(paymentMethod);
+      return transactionsCollection.snapshots().map((snapshot) {
+        double totalIncome = 0.0;
+        double totalExpenses = 0.0;
 
-      QuerySnapshot snapshot = await transactionsCollection.get();
-      double totalIncome = 0.0;
-      double totalExpenses = 0.0;
-      double balance = 0.0;
+        for (var doc in snapshot.docs) {
+          var data = doc.data() as Map<String, dynamic>;
+          double amount = (data['amount'] ?? 0.0).toDouble();
 
-      for (var doc in snapshot.docs) {
-        var data = doc.data() as Map<String, dynamic>;
-        double amount = (data['amount'] ?? 0.0).toDouble();
-
-        if (data['type'] == 'income') {
-          totalIncome += amount;
-        } else if (data['type'] == 'expense') {
-          totalExpenses += amount;
+          if (data['type'] == 'income') {
+            totalIncome += amount;
+          } else if (data['type'] == 'expense') {
+            totalExpenses += amount.abs();
+          }
         }
-      }
 
-      balance = totalIncome - totalExpenses;
+        double balance = totalIncome - totalExpenses;
 
-      return {
-        'totalIncome': totalIncome,
-        'totalExpenses': totalExpenses,
-        'balance': balance,
-      };
+        return {
+          'totalIncome': totalIncome,
+          'totalExpenses': totalExpenses,
+          'balance': balance,
+        };
+      });
     } catch (e) {
       throw Exception('Failed to get financial summary: $e');
     }

@@ -10,7 +10,8 @@ import '../Provider/paymentMethod_provider.dart';
 import 'currency_provider.dart';
 
 class DrawerScreen extends StatefulWidget {
-  const DrawerScreen({super.key});
+  final Function(String)? onPaymentMethodChanged;
+  const DrawerScreen({super.key, this.onPaymentMethodChanged});
 
   @override
   State<DrawerScreen> createState() => _DrawerScreenState();
@@ -87,6 +88,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                             onChanged: (String? newValue) {
                               if (newValue != null) {
                                 paymentMethodProvider.setPaymentMethod(newValue);
+                                widget.onPaymentMethodChanged?.call(newValue);
                               }
                             },
                           );
@@ -94,7 +96,6 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       );
                     },
                   ),
-
                   const SizedBox(height: 20),
                   _buildListTile(Icons.home, "Home", () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const HomeScreen()))),
                   _buildListTile(Icons.monetization_on, "Currency", () => _showCurrencyDialog(context)),
@@ -123,7 +124,6 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
   List<DropdownMenuItem<String>> _getDropdownItems(String currency) {
     return [
-      _buildDropdownItem("All Accounts", Icons.sell_outlined, Colors.orange, currency),
       _buildDropdownItem("Cash", Icons.money, Colors.green, currency),
       _buildDropdownItem("Payment Card", Icons.credit_card, Colors.red, currency),
     ];

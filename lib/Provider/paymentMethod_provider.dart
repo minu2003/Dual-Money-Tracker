@@ -7,7 +7,7 @@ class PaymentMethodProvider with ChangeNotifier {
   String get selectedMethod => _selectedMethod;
 
   PaymentMethodProvider() {
-    _loadPaymentMethod(); // Load when provider is created
+    _loadPaymentMethod();
   }
 
   Future<void> _loadPaymentMethod() async {

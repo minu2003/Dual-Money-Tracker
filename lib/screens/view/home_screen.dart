@@ -5,6 +5,7 @@ import 'package:money_app/components/drawer_screen.dart';
 import 'package:money_app/components/recent_transaction.dart';
 import 'package:money_app/screens/view/income_expense/income_expemses.dart';
 import 'package:provider/provider.dart';
+import '../../Provider/firestore_services.dart';
 import '../../components/appbar.dart';
 import '../../components/bottom_navbar.dart';
 import '../../components/currency_provider.dart';
@@ -32,6 +33,7 @@ class DropdownExample extends StatefulWidget {
 
 class _DropdownExampleState extends State<DropdownExample> {
   String currentAccount = 'Personal';
+  String paymentMethod = 'Cash';
   double totalIncome = 0.0;
   double totalExpenses = 0.0;
   double balance = 0.0;
@@ -39,10 +41,10 @@ class _DropdownExampleState extends State<DropdownExample> {
   @override
   void initState() {
     super.initState();
-    fetchFinancialSummary();
+    fetchFinancialSummary(paymentMethod);
   }
 
-  void fetchFinancialSummary() {
+  void fetchFinancialSummary(String paymentMethod) {
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       return;
@@ -52,6 +54,8 @@ class _DropdownExampleState extends State<DropdownExample> {
         .collection('users')
         .doc(user.uid)
         .collection('personal_transactions')
+        .doc(paymentMethod)
+        .collection('transactions')
         .snapshots()
         .listen((snapshot) {
       double income = 0.0;
@@ -80,14 +84,24 @@ class _DropdownExampleState extends State<DropdownExample> {
     setState(() {
       currentAccount = account;
     });
+    fetchFinancialSummary(account);
     print("Switched to: $account");
   }
+
+  void handlePaymentMethodChange(String selectedPaymentMethod) {
+    setState(() {
+      paymentMethod = selectedPaymentMethod;
+    });
+    fetchFinancialSummary(paymentMethod);
+    print("Switched to payment method: $selectedPaymentMethod");
+  }
+
 
   @override
   Widget build(BuildContext context) {
     final currency = Provider.of<CurrencyProvider>(context).currency;
     return Scaffold(
-      drawer: const DrawerScreen(),
+      drawer: DrawerScreen(onPaymentMethodChanged: handlePaymentMethodChange),
       appBar: CustomAppBar(onAccountChanged: handleAccountChange),
       body: Container(
         color: Color(0xFFF5F5F5),
