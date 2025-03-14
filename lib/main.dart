@@ -4,6 +4,7 @@ import 'package:money_app/Authentication/sign_in.dart';
 import 'package:money_app/screens/view/home_screen.dart';
 import 'package:provider/provider.dart';
 import 'Provider/paymentMethod_provider.dart';
+import 'Provider/transaction_period_provider.dart';
 import 'components/currency_provider.dart';
 import 'firebase_options.dart';
 
@@ -19,6 +20,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => PaymentMethodProvider()),
         ChangeNotifierProvider(create: (context) => CurrencyProvider()..loadCurrency()),
+        ChangeNotifierProvider(create: (context) => TransactionPeriodProvider()),
       ],
       child: MyApp(),
     ),

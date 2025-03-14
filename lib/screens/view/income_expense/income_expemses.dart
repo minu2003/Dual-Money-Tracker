@@ -5,6 +5,7 @@ import 'package:money_app/components/appbar.dart';
 import 'package:provider/provider.dart';
 import '../../../Provider/firestore_services.dart';
 import '../../../Provider/paymentMethod_provider.dart';
+import '../../../Provider/transaction_period_provider.dart';
 import '../../../components/bottom_navbar.dart';
 import '../../../components/currency_provider.dart';
 import 'expense_add.dart';
@@ -147,6 +148,7 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
       List<Map<String, dynamic>> categories, Function(String) onCategoryTap) {
     final currency = Provider.of<CurrencyProvider>(context).currency;
     final selectedPaymentMethod = Provider.of<PaymentMethodProvider>(context).selectedMethod;
+    final selectedPeriod = context.watch<TransactionPeriodProvider>().selectedPeriod;
     return Column(
       children: [
         SizedBox(height: 10),
@@ -189,9 +191,13 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
               }
 
               final transactions = snapshot.data!.docs.where((doc) {
-                final data = doc.data() as Map<String, dynamic>;
+                final data = doc.data() as Map<String, dynamic>?;
+                if (data == null) return false;
+
+                final date = (data['date'] as Timestamp).toDate();
                 return data['type'] == type &&
-                    (selectedCategory == "All" || data['category'] == selectedCategory);
+                    (selectedCategory == "All" || data['category'] == selectedCategory) &&
+                    _isWithinSelectedPeriod(date, selectedPeriod);
               }).toList();
 
               return ListView.builder(
@@ -262,6 +268,19 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
         ),
       ],
     );
+  }
+  bool _isWithinSelectedPeriod(DateTime date, TransactionPeriod selectedPeriod) {
+    final now = DateTime.now();
+    switch (selectedPeriod) {
+      case TransactionPeriod.day:
+        return date.year == now.year && date.month == now.month && date.day == now.day;
+      case TransactionPeriod.month:
+        return date.year == now.year && date.month == now.month;
+      case TransactionPeriod.year:
+        return date.year == now.year;
+      default:
+        return true;
+    }
   }
 }
 

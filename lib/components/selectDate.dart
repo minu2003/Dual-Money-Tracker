@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../Provider/transaction_period_provider.dart';
 
 class DateProvider {
   static ValueNotifier<String> dateNotifier = ValueNotifier<String>("Select Period");
@@ -14,9 +17,9 @@ class DateProvider {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildSelectionTile(context, "Day", Icons.today),
-              _buildSelectionTile(context, "Month", Icons.calendar_view_month),
-              _buildSelectionTile(context, "Year", Icons.event),
+              _buildSelectionTile(context, "Day", Icons.today, TransactionPeriod.day),
+              _buildSelectionTile(context, "Month", Icons.calendar_view_month, TransactionPeriod.month),
+              _buildSelectionTile(context, "Year", Icons.event, TransactionPeriod.year),
             ],
           ),
         );
@@ -24,12 +27,13 @@ class DateProvider {
     );
   }
 
-  static Widget _buildSelectionTile(BuildContext context, String title, IconData icon) {
+  static Widget _buildSelectionTile(BuildContext context, String title, IconData icon, TransactionPeriod period) {
     return ListTile(
       leading: Icon(icon, color: Colors.black),
       title: Text(title, style: const TextStyle(fontSize: 16)),
       onTap: () {
         dateNotifier.value = title;
+        Provider.of<TransactionPeriodProvider>(context, listen: false).setPeriod(period);
         Navigator.pop(context);
       },
     );

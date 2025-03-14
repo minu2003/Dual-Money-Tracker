@@ -5,6 +5,7 @@ import '../Provider/firestore_services.dart';
 import 'package:intl/intl.dart';
 
 import '../Provider/paymentMethod_provider.dart';
+import '../Provider/transaction_period_provider.dart';
 import 'currency_provider.dart';
 
 class RecentTransactions extends StatelessWidget {
@@ -14,6 +15,7 @@ class RecentTransactions extends StatelessWidget {
   Widget build(BuildContext context) {
     final currency = Provider.of<CurrencyProvider>(context).currency;
     final selectedPaymentMethod = Provider.of<PaymentMethodProvider>(context).selectedMethod;
+    final selectedPeriod = Provider.of<TransactionPeriodProvider>(context).selectedPeriod;
 
     return StreamBuilder<QuerySnapshot>(
       stream: _firestoreService.getTransactions(selectedPaymentMethod),
@@ -41,6 +43,22 @@ class RecentTransactions extends StatelessWidget {
             'date': (data['date'] as Timestamp).toDate(),
             'balance': data['balance'],
           };
+        }).toList();
+
+        DateTime now = DateTime.now();
+        transactionsList = transactionsList.where((transaction) {
+          DateTime transactionDate = transaction['date'];
+          if (selectedPeriod == TransactionPeriod.day) {
+            return transactionDate.year == now.year &&
+                transactionDate.month == now.month &&
+                transactionDate.day == now.day;
+          } else if (selectedPeriod == TransactionPeriod.month) {
+            return transactionDate.year == now.year &&
+                transactionDate.month == now.month;
+          } else if (selectedPeriod == TransactionPeriod.year) {
+            return transactionDate.year == now.year;
+          }
+          return true;
         }).toList();
 
         transactionsList.sort((a, b) => b['date'].compareTo(a['date']));
