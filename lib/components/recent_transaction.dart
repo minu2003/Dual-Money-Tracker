@@ -41,7 +41,6 @@ class RecentTransactions extends StatelessWidget {
             'amount': data['amount'],
             'type': data['type'],
             'date': (data['date'] as Timestamp).toDate(),
-            'balance': data['balance'],
           };
         }).toList();
 
@@ -61,13 +60,23 @@ class RecentTransactions extends StatelessWidget {
           return true;
         }).toList();
 
-        transactionsList.sort((a, b) => b['date'].compareTo(a['date']));
+        double balance = 0.0;
+        transactionsList.sort((a, b) => a['date'].compareTo(b['date']));
+
+        for (var transaction in transactionsList) {
+          double amount = transaction['amount'] ?? 0.0;
+          String type = transaction['type'] ?? 0.0;
+
+          if (type == 'income') {
+            balance += amount;
+          } else if (type == 'expense') {
+            balance -= amount.abs();
+          }
+
+          transaction['balance'] = balance;
+        }
 
         final recentTransactions = transactionsList.take(10).toList();
-
-        for (var transaction in recentTransactions) {
-          transaction['balance'] = transaction['balance'];
-        }
 
         return Expanded(
           child: SingleChildScrollView(
@@ -116,9 +125,9 @@ class RecentTransactions extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            "${transaction['amount'] < 0 ? '-' : '+'} $currency ${(transaction['amount'] ?? 0.0).abs().toStringAsFixed(2)}",
+                            "${transaction['type'] == 'expense' ? '-' : '+'} $currency ${(transaction['amount'] ?? 0.0).toStringAsFixed(2)}",
                             style: TextStyle(
-                              color: transaction['amount'] < 0 ? Colors.red : Colors.green,
+                              color: transaction['type'] == 'expense' ? Colors.red : Colors.green,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
