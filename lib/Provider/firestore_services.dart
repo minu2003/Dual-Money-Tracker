@@ -31,15 +31,22 @@ class FirestoreService {
     }
   }
 
-  Stream<QuerySnapshot> getTransactions(String paymentMethod) {
+  Stream<QuerySnapshot> getTransactions(String paymentMethod, DateTime? selectedDate) {
     try {
-      return _getUserTransactionsCollection(paymentMethod)
-          .orderBy('date', descending: true)
-          .snapshots();
+      Query query = _getUserTransactionsCollection(paymentMethod).orderBy('date', descending: true);
+
+      if (selectedDate != null) {
+        DateTime start = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, 0, 0, 0);
+        DateTime end = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, 23, 59, 59);
+        query = query.where('date', isGreaterThanOrEqualTo: start).where('date', isLessThanOrEqualTo: end);
+      }
+
+      return query.snapshots();
     } catch (e) {
       throw Exception('Failed to get transactions: $e');
     }
   }
+
 
   Future<double> calculateNewBalance(double amount, String type, String paymentMethod) async {
     try {

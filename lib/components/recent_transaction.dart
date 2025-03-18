@@ -16,9 +16,10 @@ class RecentTransactions extends StatelessWidget {
     final currency = Provider.of<CurrencyProvider>(context).currency;
     final selectedPaymentMethod = Provider.of<PaymentMethodProvider>(context).selectedMethod;
     final selectedPeriod = Provider.of<TransactionPeriodProvider>(context).selectedPeriod;
+    final selectedDate = Provider.of<TransactionPeriodProvider>(context).selectedDate;
 
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestoreService.getTransactions(selectedPaymentMethod),
+      stream: _firestoreService.getTransactions(selectedPaymentMethod, selectedDate),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());

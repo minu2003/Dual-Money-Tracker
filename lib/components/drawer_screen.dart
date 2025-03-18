@@ -7,6 +7,7 @@ import 'package:money_app/components/selectDate.dart';
 import 'package:money_app/screens/view/home_screen.dart';
 import 'package:money_app/screens/view/settings.dart' as settings_screen;
 import '../Provider/paymentMethod_provider.dart';
+import '../Provider/transaction_period_provider.dart';
 import 'currency_provider.dart';
 
 class DrawerScreen extends StatefulWidget {
@@ -27,12 +28,15 @@ class _DrawerScreenState extends State<DrawerScreen> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
     );
+
     if (picked != null) {
       setState(() {
         selectedDate = picked;
+        Provider.of<TransactionPeriodProvider>(context, listen: false).setSelectedDate(picked);
       });
     }
   }
+
 
   Future<void> _logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();

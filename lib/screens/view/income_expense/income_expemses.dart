@@ -149,6 +149,7 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
     final currency = Provider.of<CurrencyProvider>(context).currency;
     final selectedPaymentMethod = Provider.of<PaymentMethodProvider>(context).selectedMethod;
     final selectedPeriod = context.watch<TransactionPeriodProvider>().selectedPeriod;
+    final selectedDate = Provider.of<TransactionPeriodProvider>(context).selectedDate;
     return Column(
       children: [
         SizedBox(height: 10),
@@ -181,7 +182,7 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
         ),
         Expanded(
           child: StreamBuilder<QuerySnapshot>(
-            stream: _firestoreService.getTransactions(selectedPaymentMethod),
+            stream: _firestoreService.getTransactions(selectedPaymentMethod, selectedDate),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
