@@ -6,6 +6,7 @@ import 'package:money_app/components/recent_transaction.dart';
 import 'package:money_app/screens/view/income_expense/income_expemses.dart';
 import 'package:provider/provider.dart';
 import '../../Provider/firestore_services.dart';
+import '../../Provider/transaction_period_provider.dart';
 import '../../components/appbar.dart';
 import '../../components/bottom_navbar.dart';
 import '../../components/currency_provider.dart';
@@ -41,21 +42,53 @@ class _DropdownExampleState extends State<DropdownExample> {
   @override
   void initState() {
     super.initState();
+
     fetchFinancialSummary(paymentMethod);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<TransactionPeriodProvider>(context, listen: false)
+          .addListener(() {
+        fetchFinancialSummary(paymentMethod);
+      });
+    });
   }
+
 
   void fetchFinancialSummary(String paymentMethod) {
     User? user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      return;
+    if (user == null) return;
+
+    // Get the selected time period
+    final selectedPeriod = Provider.of<TransactionPeriodProvider>(context, listen: false).selectedPeriod;
+    DateTime now = DateTime.now();
+    DateTime startDate, endDate;
+
+    switch (selectedPeriod) {
+      case TransactionPeriod.day:
+        startDate = DateTime(now.year, now.month, now.day);
+        endDate = startDate.add(Duration(days: 1));
+        break;
+      case TransactionPeriod.month:
+        startDate = DateTime(now.year, now.month, 1);
+        endDate = DateTime(now.year, now.month + 1, 1);
+        break;
+      case TransactionPeriod.year:
+        startDate = DateTime(now.year, 1, 1);
+        endDate = DateTime(now.year + 1, 1, 1);
+        break;
+      default:
+        return;
     }
 
+    // Fetch transactions from Firestore based on selected period
     FirebaseFirestore.instance
         .collection('users')
         .doc(user.uid)
         .collection('personal_transactions')
         .doc(paymentMethod)
         .collection('transactions')
+        .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+        .where('date', isLessThan: Timestamp.fromDate(endDate))
         .snapshots()
         .listen((snapshot) {
       double income = 0.0;
@@ -72,13 +105,16 @@ class _DropdownExampleState extends State<DropdownExample> {
         }
       }
 
-      setState(() {
-        totalIncome = income;
-        totalExpenses = expenses;
-        balance = totalIncome - totalExpenses;
-      });
+      if (mounted) {
+        setState(() {
+          totalIncome = income;
+          totalExpenses = expenses;
+          balance = totalIncome - totalExpenses;
+        });
+      }
     });
   }
+
 
   void handleAccountChange(String account) {
     setState(() {
