@@ -61,7 +61,7 @@ class RecentTransactions extends StatelessWidget {
         }).toList();
 
         double balance = 0.0;
-        transactionsList.sort((a, b) => a['date'].compareTo(b['date']));
+        transactionsList.sort((a, b) => b['date'].compareTo(a['date']));
 
         for (var transaction in transactionsList) {
           double amount = transaction['amount'] ?? 0.0;
