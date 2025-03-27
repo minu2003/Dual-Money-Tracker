@@ -58,29 +58,25 @@ class _DropdownExampleState extends State<DropdownExample> {
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    // Get the selected time period
-    final selectedPeriod = Provider.of<TransactionPeriodProvider>(context, listen: false).selectedPeriod;
+    final transactionProvider = Provider.of<TransactionPeriodProvider>(context, listen: false);
     DateTime now = DateTime.now();
     DateTime startDate, endDate;
 
-    switch (selectedPeriod) {
-      case TransactionPeriod.day:
-        startDate = DateTime(now.year, now.month, now.day);
-        endDate = startDate.add(Duration(days: 1));
-        break;
-      case TransactionPeriod.month:
-        startDate = DateTime(now.year, now.month, 1);
-        endDate = DateTime(now.year, now.month + 1, 1);
-        break;
-      case TransactionPeriod.year:
-        startDate = DateTime(now.year, 1, 1);
-        endDate = DateTime(now.year + 1, 1, 1);
-        break;
-      default:
-        return;
+    if (transactionProvider.selectedDate != null) {
+      startDate = transactionProvider.selectedDate!;
+      endDate = startDate.add(Duration(days: 1));
+    } else if (transactionProvider.selectedMonth != null) {
+      startDate = DateTime(transactionProvider.selectedMonth!.year, transactionProvider.selectedMonth!.month, 1);
+      endDate = DateTime(transactionProvider.selectedMonth!.year, transactionProvider.selectedMonth!.month + 1, 1);
+    } else if (transactionProvider.selectedYear != null) {
+      startDate = DateTime(transactionProvider.selectedYear!.year, 1, 1);
+      endDate = DateTime(transactionProvider.selectedYear!.year + 1, 1, 1);
+    } else {
+
+      startDate = DateTime(now.year, now.month, 1);
+      endDate = DateTime(now.year, now.month + 1, 1);
     }
 
-    // Fetch transactions from Firestore based on selected period
     FirebaseFirestore.instance
         .collection('users')
         .doc(user.uid)
@@ -114,7 +110,6 @@ class _DropdownExampleState extends State<DropdownExample> {
       }
     });
   }
-
 
   void handleAccountChange(String account) {
     setState(() {

@@ -148,8 +148,9 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
       List<Map<String, dynamic>> categories, Function(String) onCategoryTap) {
     final currency = Provider.of<CurrencyProvider>(context).currency;
     final selectedPaymentMethod = Provider.of<PaymentMethodProvider>(context).selectedMethod;
-    final selectedPeriod = context.watch<TransactionPeriodProvider>().selectedPeriod;
     final selectedDate = Provider.of<TransactionPeriodProvider>(context).selectedDate;
+    final selectedMonth = Provider.of<TransactionPeriodProvider>(context).selectedMonth;
+    final selectedYear = Provider.of<TransactionPeriodProvider>(context).selectedYear;
     return Column(
       children: [
         SizedBox(height: 10),
@@ -182,7 +183,7 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
         ),
         Expanded(
           child: StreamBuilder<QuerySnapshot>(
-            stream: _firestoreService.getTransactions(selectedPaymentMethod, selectedDate),
+            stream: _firestoreService.getTransactions(selectedPaymentMethod, selectedDate, selectedMonth, selectedYear),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
@@ -196,9 +197,24 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
                 if (data == null) return false;
 
                 final date = (data['date'] as Timestamp).toDate();
+
+                bool isDateMatching = selectedDate != null ?
+                date.year == selectedDate.year && date.month == selectedDate.month && date.day == selectedDate.day
+                    : true;
+
+                bool isMonthMatching = selectedMonth != null ?
+                date.year == selectedMonth.year && date.month == selectedMonth.month
+                    : true;
+
+                bool isYearMatching = selectedYear != null ?
+                date.year == selectedYear.year
+                    : true;
+
                 return data['type'] == type &&
                     (selectedCategory == "All" || data['category'] == selectedCategory) &&
-                    _isWithinSelectedPeriod(date, selectedPeriod);
+                    isDateMatching &&
+                    isMonthMatching &&
+                    isYearMatching;
               }).toList();
 
               return ListView.builder(
@@ -269,19 +285,6 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
         ),
       ],
     );
-  }
-  bool _isWithinSelectedPeriod(DateTime date, TransactionPeriod selectedPeriod) {
-    final now = DateTime.now();
-    switch (selectedPeriod) {
-      case TransactionPeriod.day:
-        return date.year == now.year && date.month == now.month && date.day == now.day;
-      case TransactionPeriod.month:
-        return date.year == now.year && date.month == now.month;
-      case TransactionPeriod.year:
-        return date.year == now.year;
-      default:
-        return true;
-    }
   }
 }
 

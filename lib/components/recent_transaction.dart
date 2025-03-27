@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import '../Provider/firestore_services.dart';
 import 'package:intl/intl.dart';
-
 import '../Provider/paymentMethod_provider.dart';
 import '../Provider/transaction_period_provider.dart';
 import 'currency_provider.dart';
@@ -15,11 +14,12 @@ class RecentTransactions extends StatelessWidget {
   Widget build(BuildContext context) {
     final currency = Provider.of<CurrencyProvider>(context).currency;
     final selectedPaymentMethod = Provider.of<PaymentMethodProvider>(context).selectedMethod;
-    final selectedPeriod = Provider.of<TransactionPeriodProvider>(context).selectedPeriod;
     final selectedDate = Provider.of<TransactionPeriodProvider>(context).selectedDate;
+    final selectedMonth = Provider.of<TransactionPeriodProvider>(context).selectedMonth;
+    final selectedYear = Provider.of<TransactionPeriodProvider>(context).selectedYear;
 
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestoreService.getTransactions(selectedPaymentMethod, selectedDate),
+      stream: _firestoreService.getTransactions(selectedPaymentMethod, selectedDate, selectedMonth, selectedYear),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -45,24 +45,16 @@ class RecentTransactions extends StatelessWidget {
           };
         }).toList();
 
-        DateTime now = DateTime.now();
-        transactionsList = transactionsList.where((transaction) {
-          DateTime transactionDate = transaction['date'];
-          if (selectedPeriod == TransactionPeriod.day) {
-            return transactionDate.year == now.year &&
-                transactionDate.month == now.month &&
-                transactionDate.day == now.day;
-          } else if (selectedPeriod == TransactionPeriod.month) {
-            return transactionDate.year == now.year &&
-                transactionDate.month == now.month;
-          } else if (selectedPeriod == TransactionPeriod.year) {
-            return transactionDate.year == now.year;
-          }
-          return true;
-        }).toList();
+        if (selectedMonth != null && selectedYear != null) {
+          transactionsList = transactionsList.where((transaction) {
+            DateTime transactionDate = transaction['date'];
+            return transactionDate.month == selectedMonth!.month && transactionDate.year == selectedYear!.year;
+          }).toList();
+        }
+
+        transactionsList.sort((a, b) => a['date'].compareTo(b['date']));
 
         double balance = 0.0;
-        transactionsList.sort((a, b) => b['date'].compareTo(a['date']));
 
         for (var transaction in transactionsList) {
           double amount = transaction['amount'] ?? 0.0;
@@ -76,7 +68,7 @@ class RecentTransactions extends StatelessWidget {
 
           transaction['balance'] = balance;
         }
-
+        transactionsList = transactionsList.reversed.toList();
         final recentTransactions = transactionsList.take(10).toList();
 
         return Expanded(

@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:money_app/Authentication/sign_in.dart';
-import 'package:money_app/components/selectDate.dart';
 import 'package:money_app/screens/view/home_screen.dart';
 import 'package:money_app/screens/view/settings.dart' as settings_screen;
 import '../Provider/paymentMethod_provider.dart';
@@ -20,6 +20,8 @@ class DrawerScreen extends StatefulWidget {
 
 class _DrawerScreenState extends State<DrawerScreen> {
   DateTime? selectedDate;
+  DateTime? selectedMonth;
+  DateTime? selectedYear;
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? picked = await showDatePicker(
@@ -34,6 +36,57 @@ class _DrawerScreenState extends State<DrawerScreen> {
         selectedDate = picked;
         Provider.of<TransactionPeriodProvider>(context, listen: false).setSelectedDate(picked);
       });
+    }
+  }
+
+  Future<void> _selectMonth(BuildContext context) async {
+    DateTime now = DateTime.now();
+    DateTime? picked = await showMonthPicker(
+      context: context,
+      initialDate: selectedMonth ?? now,
+      firstDate: DateTime(2000, 1),
+      lastDate: DateTime(2100, 12),
+    );
+
+    if (picked != null) {
+      setState(() {
+        selectedMonth = picked;
+      });
+    }
+  }
+
+  Future<void> _selectYear(BuildContext context) async {
+    DateTime now = DateTime.now();
+    int? selectedYear = await showDialog<int>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Select Year"),
+          content: SizedBox(
+            height: 200,
+            width: 100,
+            child: ListView.builder(
+              itemCount: 101,
+              itemBuilder: (context, index) {
+                int year = 2000 + index;
+                return ListTile(
+                  title: Text(year.toString()),
+                  onTap: () {
+                    Navigator.of(context).pop(year);
+                  },
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+
+    if (selectedYear != null) {
+      setState(() {
+        this.selectedYear = DateTime(selectedYear);
+      });
+      Provider.of<TransactionPeriodProvider>(context, listen: false).setSelectedYear(DateTime(selectedYear));
     }
   }
 
@@ -107,8 +160,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   const SizedBox(height: 40),
                   const Align(alignment: Alignment.centerLeft, child: Padding(padding: EdgeInsets.only(left: 18), child: Text("Viewed By", style: TextStyle(fontWeight: FontWeight.bold)))),
                   const SizedBox(height: 20),
-                  _buildListTile(Icons.calendar_today, "Select Period", () => DateProvider.showDateDialog(context)),
                   _buildListTile(Icons.edit_calendar, selectedDate != null ? "${selectedDate!.toLocal()}".split(' ')[0] : "Choose Date", () => _selectDate(context)),
+                  _buildListTile(Icons.date_range, selectedMonth != null ? "${selectedMonth!.month}/${selectedMonth!.year}" : "Choose Month", () => _selectMonth(context)),
+                  _buildListTile(Icons.calendar_today, selectedYear != null ? "${selectedYear!.year}" : "Choose Year", () => _selectYear(context)),
                   Padding(
                     padding: const EdgeInsets.only(top: 60),
                     child: ListTile(

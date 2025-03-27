@@ -31,13 +31,17 @@ class FirestoreService {
     }
   }
 
-  Stream<QuerySnapshot> getTransactions(String paymentMethod, DateTime? selectedDate) {
+  Stream<QuerySnapshot> getTransactions(String paymentMethod, DateTime? selectedDate, DateTime? selectedMonth, DateTime? selectedYear) {
     try {
       Query query = _getUserTransactionsCollection(paymentMethod).orderBy('date', descending: true);
 
       if (selectedDate != null) {
         DateTime start = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, 0, 0, 0);
         DateTime end = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, 23, 59, 59);
+        query = query.where('date', isGreaterThanOrEqualTo: start).where('date', isLessThanOrEqualTo: end);
+      } else if (selectedMonth != null && selectedYear != null) {
+        DateTime start = DateTime(selectedYear.year, selectedMonth.month, 1);
+        DateTime end = DateTime(selectedYear.year, selectedMonth.month + 1, 0, 23, 59, 59);
         query = query.where('date', isGreaterThanOrEqualTo: start).where('date', isLessThanOrEqualTo: end);
       }
 

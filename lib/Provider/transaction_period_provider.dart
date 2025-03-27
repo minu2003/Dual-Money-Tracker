@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 
-enum TransactionPeriod { day, month, year }
-
 class TransactionPeriodProvider with ChangeNotifier {
-  TransactionPeriod _selectedPeriod = TransactionPeriod.month;
   DateTime? _selectedDate;
+  DateTime? _selectedMonth = DateTime(DateTime.now().year, DateTime.now().month);
+  DateTime? _selectedYear;
 
-  TransactionPeriod get selectedPeriod => _selectedPeriod;
   DateTime? get selectedDate => _selectedDate;
-
-  void setPeriod(TransactionPeriod period) {
-    _selectedPeriod = period;
-    notifyListeners();
-  }
+  DateTime? get selectedMonth => _selectedMonth;
+  DateTime? get selectedYear => _selectedYear;
 
   void setSelectedDate(DateTime date) {
     _selectedDate = date;
+    notifyListeners();
+  }
+
+  void setSelectedMonth(DateTime month) {
+    _selectedMonth = month;
+    notifyListeners();
+  }
+
+  void setSelectedYear(DateTime year) {
+    _selectedYear = year;
     notifyListeners();
   }
 }
