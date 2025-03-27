@@ -45,10 +45,23 @@ class RecentTransactions extends StatelessWidget {
           };
         }).toList();
 
-        if (selectedMonth != null && selectedYear != null) {
+        if (selectedDate != null) {
           transactionsList = transactionsList.where((transaction) {
             DateTime transactionDate = transaction['date'];
-            return transactionDate.month == selectedMonth!.month && transactionDate.year == selectedYear!.year;
+            return transactionDate.year == selectedDate!.year &&
+                transactionDate.month == selectedDate!.month &&
+                transactionDate.day == selectedDate!.day;
+          }).toList();
+        } else if (selectedMonth != null && selectedYear != null) {
+          transactionsList = transactionsList.where((transaction) {
+            DateTime transactionDate = transaction['date'];
+            return transactionDate.month == selectedMonth!.month &&
+                transactionDate.year == selectedYear!.year;
+          }).toList();
+        } else if (selectedYear != null) {
+          transactionsList = transactionsList.where((transaction) {
+            DateTime transactionDate = transaction['date'];
+            return transactionDate.year == selectedYear!.year;
           }).toList();
         }
 

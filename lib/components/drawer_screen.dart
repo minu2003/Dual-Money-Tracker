@@ -51,7 +51,13 @@ class _DrawerScreenState extends State<DrawerScreen> {
     if (picked != null) {
       setState(() {
         selectedMonth = picked;
+        selectedYear = DateTime(picked.year);
+        selectedDate = null; // Reset selectedDate
       });
+
+      Provider.of<TransactionPeriodProvider>(context, listen: false).setSelectedDate(null);
+      Provider.of<TransactionPeriodProvider>(context, listen: false).setSelectedMonth(picked);
+      Provider.of<TransactionPeriodProvider>(context, listen: false).setSelectedYear(DateTime(picked.year));
     }
   }
 
@@ -85,7 +91,12 @@ class _DrawerScreenState extends State<DrawerScreen> {
     if (selectedYear != null) {
       setState(() {
         this.selectedYear = DateTime(selectedYear);
+        selectedMonth = null;
+        selectedDate = null;
       });
+
+      Provider.of<TransactionPeriodProvider>(context, listen: false).setSelectedDate(null);
+      Provider.of<TransactionPeriodProvider>(context, listen: false).setSelectedMonth(null);
       Provider.of<TransactionPeriodProvider>(context, listen: false).setSelectedYear(DateTime(selectedYear));
     }
   }

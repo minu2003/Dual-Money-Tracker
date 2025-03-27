@@ -9,17 +9,17 @@ class TransactionPeriodProvider with ChangeNotifier {
   DateTime? get selectedMonth => _selectedMonth;
   DateTime? get selectedYear => _selectedYear;
 
-  void setSelectedDate(DateTime date) {
+  void setSelectedDate(DateTime? date) {
     _selectedDate = date;
     notifyListeners();
   }
 
-  void setSelectedMonth(DateTime month) {
+  void setSelectedMonth(DateTime? month) {
     _selectedMonth = month;
     notifyListeners();
   }
 
-  void setSelectedYear(DateTime year) {
+  void setSelectedYear(DateTime? year) {
     _selectedYear = year;
     notifyListeners();
   }
