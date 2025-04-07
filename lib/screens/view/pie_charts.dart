@@ -1,7 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:money_app/components/PieCharts/AllTransactionPieChart.dart';
-import '../../components/PieCharts/IncomeExpensesPieCharts.dart';
+import '../../components/PieCharts/ExpensePieChart.dart';
+import '../../components/PieCharts/IncomePieChart.dart';
 
 class CategoryColors{
   static const incomeColors = [
@@ -25,7 +26,6 @@ class CategoryColors{
     Colors.indigo,
     Colors.pinkAccent,
   ];
-
 }
 
 class PiechartScreen extends StatefulWidget {
@@ -44,12 +44,11 @@ class _PiechartScreenState extends State<PiechartScreen>
   void initState() {
     super.initState();
     _tabController = TabController(
-      length: 2,
+      length: 3,
       vsync: this,
       initialIndex: widget.initialTabIndex,
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -86,14 +85,16 @@ class _PiechartScreenState extends State<PiechartScreen>
         ),
       ),
       body: DefaultTabController(
-          length: 2,
+          length: 3,
           child: Column(
             children: [
               TabBar(
                 controller: _tabController,
                 tabs: [
                   Tab(text: 'All',),
-                  Tab(text: 'Income/Expenses',)
+                  Tab(text: 'Income',),
+                  Tab(text: 'Expense',)
+
                 ],
                 labelColor: Colors.lightBlue,
                 indicatorColor: Colors.lightBlue,
@@ -103,14 +104,10 @@ class _PiechartScreenState extends State<PiechartScreen>
                       controller: _tabController,
                       children: [
                         AllTransactionsPieChart(
-                          incomes: incomes,
-                          expenses: expenses,
+                            paymentMethod: 'Cash'
                         ),
-                        // Income and Expenses Pie Charts
-                        IncomeExpensesPieCharts(
-                          incomeData: incomeData,
-                          expenseData: expenseData,
-                        ),
+                        IncomePieChart(paymentMethod: 'Cash'),
+                        ExpensePieChart(paymentMethod: 'Cash'),
                       ]))
             ],
           )),

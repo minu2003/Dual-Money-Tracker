@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
-import '../Provider/firestore_services.dart';
+import '../../../Provider/firestore_services.dart';
 import 'package:intl/intl.dart';
-import '../Provider/paymentMethod_provider.dart';
-import '../Provider/transaction_period_provider.dart';
-import 'currency_provider.dart';
+import '../../../Provider/paymentMethod_provider.dart';
+import '../../../Provider/transaction_period_provider.dart';
+import '../../../components/currency_provider.dart';
 
-class RecentTransactions extends StatelessWidget {
+class recentTransactions extends StatelessWidget {
   final FirestoreService _firestoreService = FirestoreService();
 
   @override

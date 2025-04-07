@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'AccountSwitcher.dart';
+import '../../../components/AccountSwitcher.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class customAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Function(String) onAccountChanged;
   final String currentAccount;
 
-  const CustomAppBar({Key? key,
-    required this.onAccountChanged,
-    required this.currentAccount,})
+  const customAppBar({Key? key, required this.onAccountChanged, required this.currentAccount,})
       : super(key: key);
 
   @override
@@ -19,7 +17,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           const SizedBox(width: 5),
           Image.asset(
-            "assets/Logo.png",
+            "assets/LogoBusiness.png",
             height: 50,
           ),
         ],

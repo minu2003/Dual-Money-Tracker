@@ -2,16 +2,26 @@ import 'package:flutter/material.dart';
 
 class AccountSwitcher extends StatefulWidget {
   final Function(String) onAccountChanged;
+  final String initialValue;
 
-  const AccountSwitcher({Key? key, required this.onAccountChanged}) : super(key: key);
+  const AccountSwitcher({
+    Key? key,
+    required this.onAccountChanged,
+    this.initialValue = 'Personal',
+  }) : super(key: key);
 
   @override
   State<AccountSwitcher> createState() => _AccountSwitcherState();
 }
 
 class _AccountSwitcherState extends State<AccountSwitcher> {
-  List<String> dropdownItems = ['Business', 'Personal'];
-  String selectedValue = 'Personal';
+  late String selectedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedValue = widget.initialValue;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +30,10 @@ class _AccountSwitcherState extends State<AccountSwitcher> {
       padding: const EdgeInsets.symmetric(horizontal: 6),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-            colors: [Color(0xFF5efce8), Color(0xFF736efe)],
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight),
+          colors: [Color(0xFF5efce8), Color(0xFF736efe)],
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+        ),
         borderRadius: BorderRadius.circular(12),
       ),
       child: DropdownButton<String>(
@@ -31,13 +42,15 @@ class _AccountSwitcherState extends State<AccountSwitcher> {
         underline: const SizedBox(),
         dropdownColor: Colors.white,
         onChanged: (String? newValue) {
-          setState(() {
-            selectedValue = newValue!;
-          });
-          widget.onAccountChanged(selectedValue);
+          if (newValue != null) {
+            setState(() {
+              selectedValue = newValue;
+            });
+            widget.onAccountChanged(newValue);
+          }
         },
-        items: dropdownItems.map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
+        items: ['Personal', 'Business'].map((value) {
+          return DropdownMenuItem(
             value: value,
             child: Text(
               value,

@@ -52,7 +52,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
       setState(() {
         selectedMonth = picked;
         selectedYear = DateTime(picked.year);
-        selectedDate = null; // Reset selectedDate
+        selectedDate = null;
       });
 
       Provider.of<TransactionPeriodProvider>(context, listen: false).setSelectedDate(null);
@@ -165,7 +165,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                     },
                   ),
                   const SizedBox(height: 20),
-                  _buildListTile(Icons.home, "Home", () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const HomeScreen()))),
+                  _buildListTile(Icons.home, "Home", () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => HomeScreen(onAccountChanged: (String account) {})))),
                   _buildListTile(Icons.monetization_on, "Currency", () => _showCurrencyDialog(context)),
                   _buildListTile(Icons.settings, "Settings", () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const settings_screen.Settings()))),
                   const SizedBox(height: 40),

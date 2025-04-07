@@ -76,7 +76,22 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(onAccountChanged: handleAccountChange),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFECECEC),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(width: 5),
+            Padding(
+              padding: const EdgeInsets.only(right: 50),
+              child: Image.asset(
+                "assets/Logo.png",
+                height: 50,
+              ),
+            ),
+          ],
+        ),
+      ),
       body: DefaultTabController(
         length: 2,
         child: Column(

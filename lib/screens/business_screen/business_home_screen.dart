@@ -7,15 +7,16 @@ import 'package:money_app/screens/view/income_expense/income_expemses.dart';
 import 'package:provider/provider.dart';
 import '../../Provider/firestore_services.dart';
 import '../../Provider/transaction_period_provider.dart';
-import '../../components/appbar.dart';
 import '../../components/bottom_navbar.dart';
 import '../../components/currency_provider.dart';
-import 'income_expense/expense_add.dart';
-import 'income_expense/income_add.dart';
+import 'business_income_expense/B_Expense_add.dart';
+import 'business_income_expense/B_Income_add.dart';
+import 'components/recentTransaction.dart';
+import 'components/B_appbar.dart';
 
-class HomeScreen extends StatelessWidget {
+class BusinessHomeScreen extends StatelessWidget {
   final Function(String) onAccountChanged;
-  const HomeScreen({super.key, required this.onAccountChanged});
+  const BusinessHomeScreen({super.key, required this.onAccountChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,7 @@ class DropdownExample extends StatefulWidget {
 }
 
 class _DropdownExampleState extends State<DropdownExample> {
-  String currentAccount = 'Personal';
+  String currentAccount = 'Business';
   String paymentMethod = 'Cash';
   double totalIncome = 0.0;
   double totalExpenses = 0.0;
@@ -82,7 +83,7 @@ class _DropdownExampleState extends State<DropdownExample> {
     FirebaseFirestore.instance
         .collection('users')
         .doc(user.uid)
-        .collection('personal_transactions')
+        .collection('Business_Transactions')
         .doc(paymentMethod)
         .collection('transactions')
         .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
@@ -136,7 +137,7 @@ class _DropdownExampleState extends State<DropdownExample> {
     final currency = Provider.of<CurrencyProvider>(context).currency;
     return Scaffold(
       drawer: DrawerScreen(onPaymentMethodChanged: handlePaymentMethodChange),
-      appBar: CustomAppBar(onAccountChanged: handleAccountChange, currentAccount: currentAccount),
+      appBar: customAppBar(onAccountChanged: handleAccountChange, currentAccount: currentAccount,),
       body: Container(
         color: Color(0xFFF5F5F5),
         child: Column(
@@ -344,7 +345,7 @@ class _DropdownExampleState extends State<DropdownExample> {
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).push(
-                           MaterialPageRoute(builder: (context) => income_expense(initialTabIndex: 0))
+                              MaterialPageRoute(builder: (context) => income_expense(initialTabIndex: 0))
                           );
                         },
                         style: TextButton.styleFrom(
@@ -363,7 +364,7 @@ class _DropdownExampleState extends State<DropdownExample> {
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => income_expense(initialTabIndex: 1))
+                              MaterialPageRoute(builder: (context) => income_expense(initialTabIndex: 1))
                           );
                         },
                         style: TextButton.styleFrom(
@@ -383,7 +384,7 @@ class _DropdownExampleState extends State<DropdownExample> {
                 ],
               ),
             ),
-            RecentTransactions()
+            recentTransactions()
           ],
         ),
       ),
@@ -398,7 +399,7 @@ class _DropdownExampleState extends State<DropdownExample> {
               scale: 1.8,
               child: FloatingActionButton(
                 onPressed: () {
-                  showAddExpenseDialog(context);
+                  AddExpenseDialog(context);
                 },
                 backgroundColor: Colors.white,
                 shape: const CircleBorder(),
@@ -412,7 +413,7 @@ class _DropdownExampleState extends State<DropdownExample> {
               scale: 1.8,
               child: FloatingActionButton(
                 onPressed: () {
-                  showAddIncomeDialog(context);
+                  AddIncomeDialog(context);
                 },
                 backgroundColor: Colors.white,
                 shape: const CircleBorder(),

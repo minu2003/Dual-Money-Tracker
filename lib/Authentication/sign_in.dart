@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_app/screens/home_wrapper.dart';
 import 'package:money_app/screens/view/forgot_password_screen.dart';
 import 'package:money_app/Authentication/sign_up.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,7 +33,7 @@ class _loginState extends State<login> {
       );
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(builder: (context) => const HomeWrapper()),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

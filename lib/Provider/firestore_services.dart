@@ -19,10 +19,25 @@ class FirestoreService {
     }
   }
 
-  Future<void> addTransaction(Map<String, dynamic> transaction) async {
+  CollectionReference _getBusinessTransactionsCollection(String paymentMethod){
+    User? user = _auth.currentUser;
+    if(user != null){
+      return _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('Business_Transactions')
+          .doc(paymentMethod)
+          .collection('transactions');
+    }else{
+      throw Exception('No authenticated user found');
+    }
+  }
+
+  Future<void> addTransaction(Map<String, dynamic> transaction, {bool isBusiness = false}) async {
     try {
       String paymentMethod = transaction['paymentMethod'] ?? 'Cash';
-      CollectionReference transactionsCollection = _getUserTransactionsCollection(paymentMethod);
+      CollectionReference transactionsCollection =
+      isBusiness ? _getBusinessTransactionsCollection(paymentMethod) : _getUserTransactionsCollection(paymentMethod);
 
       DocumentReference newTransaction = await transactionsCollection.add(transaction);
       print("Transaction added: ${newTransaction.id}");
@@ -31,9 +46,18 @@ class FirestoreService {
     }
   }
 
-  Stream<QuerySnapshot> getTransactions(String paymentMethod, DateTime? selectedDate, DateTime? selectedMonth, DateTime? selectedYear) {
+  Stream<QuerySnapshot> getTransactions(
+      String paymentMethod,
+      DateTime? selectedDate,
+      DateTime? selectedMonth,
+      DateTime? selectedYear, {
+        bool isBusiness = false,
+  }) {
     try {
-      Query query = _getUserTransactionsCollection(paymentMethod).orderBy('date', descending: true);
+      Query query = (isBusiness
+          ? _getBusinessTransactionsCollection(paymentMethod)
+          : _getUserTransactionsCollection(paymentMethod))
+          .orderBy('date', descending: true);
 
       if (selectedDate != null) {
         DateTime start = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, 0, 0, 0);
@@ -52,9 +76,9 @@ class FirestoreService {
   }
 
 
-  Future<double> calculateNewBalance(double amount, String type, String paymentMethod) async {
+  Future<double> calculateNewBalance(double amount, String type, String paymentMethod, {bool isBusiness = false}) async {
     try {
-      CollectionReference transactionsCollection = _getUserTransactionsCollection(paymentMethod);
+      CollectionReference transactionsCollection = isBusiness ? _getBusinessTransactionsCollection(paymentMethod) : _getUserTransactionsCollection(paymentMethod);
       QuerySnapshot snapshot = await transactionsCollection.orderBy('date', descending: true).limit(1).get();
 
       double lastBalance = 0.0;
@@ -69,9 +93,9 @@ class FirestoreService {
     }
   }
 
-  Stream<Map<String, double>> getFinancialSummary(String paymentMethod) {
+  Stream<Map<String, double>> getFinancialSummary(String paymentMethod, {bool isBusiness = false}) {
     try {
-      CollectionReference transactionsCollection = _getUserTransactionsCollection(paymentMethod);
+      CollectionReference transactionsCollection = isBusiness ? _getBusinessTransactionsCollection(paymentMethod) : _getUserTransactionsCollection(paymentMethod);
       return transactionsCollection.snapshots().map((snapshot) {
         double totalIncome = 0.0;
         double totalExpenses = 0.0;

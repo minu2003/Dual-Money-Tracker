@@ -31,7 +31,7 @@ class BottomNavBar extends StatelessWidget {
                 icon: GestureDetector(
                   onTap: (){
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => HomeScreen())
+                      MaterialPageRoute(builder: (context) => HomeScreen(onAccountChanged: (String account) {}))
                     );
                   },
                   child: Container(
@@ -59,13 +59,13 @@ class BottomNavBar extends StatelessWidget {
                     child: const Padding(
                       padding: EdgeInsets.only(left: 15.0),
                       child: Icon(
-                        Icons.bar_chart,
+                        Icons.pie_chart,
                         size: 30,
                       ),
                     ),
                   ),
                 ),
-                label: 'BarChart',
+                label: 'PieChart',
               ),
 
             ],
