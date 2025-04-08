@@ -5,26 +5,29 @@ class FirestoreService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  //personal
-  CollectionReference _getUserTransactionsCollection(String paymentMethod) {
+  // Personal and Business transaction collections
+  CollectionReference _getTransactionsCollection(String paymentMethod, {bool isBusiness = false}) {
     User? user = _auth.currentUser;
     if (user != null) {
+      String collectionPath = isBusiness
+          ? 'Business_Transactions'
+          : 'personal_transactions';
       return _firestore
           .collection('users')
           .doc(user.uid)
-          .collection('personal_transactions')
+          .collection(collectionPath)
           .doc(paymentMethod)
           .collection('transactions');
     } else {
       throw Exception('No authenticated user found');
     }
   }
+
+  // Add transaction for personal or business
   Future<void> addTransaction(Map<String, dynamic> transaction, {bool isBusiness = false}) async {
     try {
       String paymentMethod = transaction['paymentMethod'] ?? 'Cash';
-      CollectionReference transactionsCollection =
-      isBusiness ? _getBusinessTransactionsCollection(paymentMethod) : _getUserTransactionsCollection(paymentMethod);
-
+      CollectionReference transactionsCollection = _getTransactionsCollection(paymentMethod, isBusiness: isBusiness);
       DocumentReference newTransaction = await transactionsCollection.add(transaction);
       print("Transaction added: ${newTransaction.id}");
     } catch (e) {
@@ -32,18 +35,17 @@ class FirestoreService {
     }
   }
 
+  // Get transactions for personal or business based on filters (date, month, year)
   Stream<QuerySnapshot> getTransactions(
       String paymentMethod,
       DateTime? selectedDate,
       DateTime? selectedMonth,
       DateTime? selectedYear, {
         bool isBusiness = false,
-  }) {
+      }) {
     try {
-      Query query = (isBusiness
-          ? _getBusinessTransactionsCollection(paymentMethod)
-          : _getUserTransactionsCollection(paymentMethod))
-          .orderBy('date', descending: true);
+      CollectionReference transactionsCollection = _getTransactionsCollection(paymentMethod, isBusiness: isBusiness);
+      Query query = transactionsCollection.orderBy('date', descending: true);
 
       if (selectedDate != null) {
         DateTime start = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, 0, 0, 0);
@@ -61,10 +63,10 @@ class FirestoreService {
     }
   }
 
-
+  // Calculate balance after adding an income or expense
   Future<double> calculateNewBalance(double amount, String type, String paymentMethod, {bool isBusiness = false}) async {
     try {
-      CollectionReference transactionsCollection = isBusiness ? _getBusinessTransactionsCollection(paymentMethod) : _getUserTransactionsCollection(paymentMethod);
+      CollectionReference transactionsCollection = _getTransactionsCollection(paymentMethod, isBusiness: isBusiness);
       QuerySnapshot snapshot = await transactionsCollection.orderBy('date', descending: true).limit(1).get();
 
       double lastBalance = 0.0;
@@ -79,9 +81,10 @@ class FirestoreService {
     }
   }
 
+  // Get financial summary (income, expenses, balance) for personal or business
   Stream<Map<String, double>> getFinancialSummary(String paymentMethod, {bool isBusiness = false}) {
     try {
-      CollectionReference transactionsCollection = isBusiness ? _getBusinessTransactionsCollection(paymentMethod) : _getUserTransactionsCollection(paymentMethod);
+      CollectionReference transactionsCollection = _getTransactionsCollection(paymentMethod, isBusiness: isBusiness);
       return transactionsCollection.snapshots().map((snapshot) {
         double totalIncome = 0.0;
         double totalExpenses = 0.0;
@@ -109,25 +112,12 @@ class FirestoreService {
       throw Exception('Failed to get financial summary: $e');
     }
   }
-  //Business
-  CollectionReference _getBusinessTransactionsCollection(String paymentMethod){
-    User? user = _auth.currentUser;
-    if(user != null){
-      return _firestore
-          .collection('users')
-          .doc(user.uid)
-          .collection('Business_Transactions')
-          .doc(paymentMethod)
-          .collection('transactions');
-    }else{
-      throw Exception('No authenticated user found');
-    }
-  }
 
+  // Add business credit
   Future<void> addBusinessCredit(Map<String, dynamic> transaction) async {
     try {
       String paymentMethod = transaction['paymentMethod'] ?? 'Cash';
-      CollectionReference creditsCollection = _getBusinessTransactionsCollection(paymentMethod);
+      CollectionReference creditsCollection = _getTransactionsCollection(paymentMethod, isBusiness: true);
       DocumentReference newTransaction = await creditsCollection.add(transaction);
       print("Business credit added: ${newTransaction.id}");
     } catch (e) {

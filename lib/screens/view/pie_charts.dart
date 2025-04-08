@@ -52,21 +52,6 @@ class _PiechartScreenState extends State<PiechartScreen>
 
   @override
   Widget build(BuildContext context) {
-    final incomes = 3000.0;
-    final expenses = 1500.0;
-    final incomeData = [
-      PieChartSectionData(value: 50, title: '50%', color: CategoryColors.incomeColors[0] ),
-      PieChartSectionData(value: 30, title: '30%', color: CategoryColors.incomeColors[1]),
-      PieChartSectionData(value: 20, title: '20%', color: CategoryColors.incomeColors[2])
-    ];
-    final expenseData = [
-      PieChartSectionData(value: 40, title: '40%', color: CategoryColors.expenseColors[0]),
-      PieChartSectionData(value: 20, title: '20%', color: CategoryColors.expenseColors[1]),
-      PieChartSectionData(value: 15, title: '15%', color: CategoryColors.expenseColors[2]),
-      PieChartSectionData(value: 17, title: '17%', color: CategoryColors.expenseColors[3]),
-
-    ];
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFECECEC),

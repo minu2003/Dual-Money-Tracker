@@ -20,6 +20,7 @@ void AddDebitDialog (BuildContext context){
     {"icon": Icons.directions_bus, "label": "Travel & Transportation"},
     {"icon": Icons.signal_wifi_statusbar_connected_no_internet_4_rounded, "label": "Internet & Communication"},
     {"icon": Icons.subscriptions, "label": "Software Subscriptions"},
+    {"icon": Icons.category, "label": "Others"},
   ];
 
   String selectedPaymentMethod = Provider.of<PaymentMethodProvider>(context, listen: false).selectedMethod;

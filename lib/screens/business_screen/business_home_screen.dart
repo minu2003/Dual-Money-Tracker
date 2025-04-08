@@ -3,16 +3,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:money_app/components/drawer_screen.dart';
 import 'package:money_app/components/recent_transaction.dart';
+import 'package:money_app/screens/business_screen/credit_debit/credit_debit.dart';
 import 'package:money_app/screens/view/income_expense/income_expemses.dart';
 import 'package:provider/provider.dart';
 import '../../Provider/firestore_services.dart';
 import '../../Provider/transaction_period_provider.dart';
 import '../../components/bottom_navbar.dart';
 import '../../components/currency_provider.dart';
-import 'business_income_expense/debit_add.dart';
-import 'business_income_expense/credit_add.dart';
 import 'components/recentTransaction.dart';
 import 'components/B_appbar.dart';
+import 'credit_debit/credit_add.dart';
+import 'credit_debit/debit_add.dart';
 
 class BusinessHomeScreen extends StatelessWidget {
   final Function(String) onAccountChanged;
@@ -38,8 +39,8 @@ class DropdownExample extends StatefulWidget {
 class _DropdownExampleState extends State<DropdownExample> {
   String currentAccount = 'Business';
   String paymentMethod = 'Cash';
-  double totalIncome = 0.0;
-  double totalExpenses = 0.0;
+  double totalCredit = 0.0;
+  double totalDebit = 0.0;
   double balance = 0.0;
 
   @override
@@ -90,25 +91,25 @@ class _DropdownExampleState extends State<DropdownExample> {
         .where('date', isLessThan: Timestamp.fromDate(endDate))
         .snapshots()
         .listen((snapshot) {
-      double income = 0.0;
-      double expenses = 0.0;
+      double credit = 0.0;
+      double Debit = 0.0;
 
       for (var doc in snapshot.docs) {
         var data = doc.data() as Map<String, dynamic>;
         double amount = (data['amount'] ?? 0.0).toDouble();
 
-        if (data['type'] == 'income') {
-          income += amount;
-        } else if (data['type'] == 'expense') {
-          expenses += amount.abs();
+        if (data['type'] == 'credit') {
+          credit += amount;
+        } else if (data['type'] == 'Debit') {
+          Debit += amount.abs();
         }
       }
 
       if (mounted) {
         setState(() {
-          totalIncome = income;
-          totalExpenses = expenses;
-          balance = totalIncome - totalExpenses;
+          totalCredit = credit;
+          totalDebit = Debit;
+          balance = totalCredit - totalDebit;
         });
       }
     });
@@ -238,7 +239,7 @@ class _DropdownExampleState extends State<DropdownExample> {
                           children: [
                             Row(
                               children: [
-                                Text("Expenses",
+                                Text("Debits",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 12,
@@ -252,7 +253,7 @@ class _DropdownExampleState extends State<DropdownExample> {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  totalExpenses.toStringAsFixed(0),
+                                  totalDebit.toStringAsFixed(0),
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
@@ -290,7 +291,7 @@ class _DropdownExampleState extends State<DropdownExample> {
                           children: [
                             Row(
                               children: [
-                                Text("Income",
+                                Text("Credit",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 12,
@@ -304,7 +305,7 @@ class _DropdownExampleState extends State<DropdownExample> {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  totalIncome.toStringAsFixed(0),
+                                  totalCredit.toStringAsFixed(0),
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
@@ -345,14 +346,14 @@ class _DropdownExampleState extends State<DropdownExample> {
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => income_expense(initialTabIndex: 0))
+                              MaterialPageRoute(builder: (context) => credit_debit(initialTabIndex: 0))
                           );
                         },
                         style: TextButton.styleFrom(
                             backgroundColor: Colors.white
                         ),
                         child: const Text(
-                          "Income",
+                          "Credits",
                           style: TextStyle(
                             color: Colors.black54,
                             fontSize: 11,
@@ -364,14 +365,14 @@ class _DropdownExampleState extends State<DropdownExample> {
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => income_expense(initialTabIndex: 1))
+                              MaterialPageRoute(builder: (context) => credit_debit(initialTabIndex: 1))
                           );
                         },
                         style: TextButton.styleFrom(
                           backgroundColor: Colors.white,
                         ),
                         child: const Text(
-                          "Expenses",
+                          "Debits",
                           style: TextStyle(
                             color: Colors.black54,
                             fontSize: 11,
