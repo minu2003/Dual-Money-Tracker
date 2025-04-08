@@ -5,26 +5,21 @@ import '../../../Provider/paymentMethod_provider.dart';
 
 final FirestoreService _firestoreService = FirestoreService();
 
-void AddExpenseDialog (BuildContext context){
+void AddDebitDialog (BuildContext context){
   String? selectedCategory;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
 
   final List<Map<String, dynamic>> categories = [
-    {"icon": Icons.local_gas_station, "label": "Gas-Filling"},
-    {"icon": Icons.directions_car, "label": "Car"},
-    {"icon": Icons.shopping_cart, "label": "Grocery"},
-    {"icon": Icons.fastfood, "label": "Dine In"},
-    {"icon": Icons.receipt_long, "label": "Bill"},
-    {"icon": Icons.phone, "label": "Communication"},
-    {"icon": Icons.flight, "label": "Travel"},
-    {"icon": Icons.local_hospital, "label": "Health"},
-    {"icon": Icons.tv, "label": "Entertainment"},
-    {"icon": Icons.home, "label": "House"},
-    {"icon": Icons.card_giftcard, "label": "Gift"},
-    {"icon": Icons.money, "label": "Loan"},
-    {"icon": Icons.checkroom, "label": "Cloths"},
-    {"icon": Icons.category, "label": "Others"},
+    {"icon": Icons.house, "label": "Rent"},
+    {"icon": Icons.monetization_on, "label": "Salaries and Wages"},
+    {"icon": Icons.inventory, "label": "Supplies & Inventory"},
+    {"icon": Icons.ads_click, "label": "Advertising/Marketing"},
+    {"icon": Icons.money, "label": "Taxes & Fees"},
+    {"icon": Icons.attach_money, "label": "Loan Repayments"},
+    {"icon": Icons.directions_bus, "label": "Travel & Transportation"},
+    {"icon": Icons.signal_wifi_statusbar_connected_no_internet_4_rounded, "label": "Internet & Communication"},
+    {"icon": Icons.subscriptions, "label": "Software Subscriptions"},
   ];
 
   String selectedPaymentMethod = Provider.of<PaymentMethodProvider>(context, listen: false).selectedMethod;
@@ -100,13 +95,13 @@ void AddExpenseDialog (BuildContext context){
                           selectedCategory != null) {
 
                         double amount = double.parse(amountController.text);
-                        double newBalance = await _firestoreService.calculateNewBalance(amount, 'expense', selectedPaymentMethod);
+                        double newBalance = await _firestoreService.calculateNewBalance(amount, 'expense', selectedPaymentMethod, isBusiness: true);
 
-                        await _firestoreService.addTransaction({
+                        await _firestoreService.addBusinessCredit({
                           'title': titleController.text,
                           'amount': -double.parse(amountController.text),
                           'date': DateTime.now(),
-                          'type': 'expense',
+                          'type': 'Debit',
                           'category': selectedCategory,
                           'paymentMethod': selectedPaymentMethod,
                           'balance' : newBalance,
@@ -114,7 +109,7 @@ void AddExpenseDialog (BuildContext context){
                         Navigator.pop(context);
                       }
                     },
-                    child: Text("Add Expense",
+                    child: Text("Add Debit",
                       style: TextStyle(color: Colors.white),
                     ))
               ],

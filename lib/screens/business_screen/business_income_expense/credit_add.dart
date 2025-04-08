@@ -5,15 +5,16 @@ import '../../../Provider/paymentMethod_provider.dart';
 
 final FirestoreService _firestoreService = FirestoreService();
 
-void AddIncomeDialog (BuildContext context){
+void AddCreditDialog (BuildContext context){
   String? selectedCategory;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
 
   final List<Map<String, dynamic>> categories = [
-    {"icon": Icons.account_balance, "label": "Deposits"},
-    {"icon": Icons.monetization_on, "label": "Salary"},
-    {"icon": Icons.savings, "label": "Savings"},
+    {"icon": Icons.account_balance, "label": "Sales Revenue"},
+    {"icon": Icons.monetization_on, "label": "Loans"},
+    {"icon": Icons.savings, "label": "Investments"},
+    {"icon": Icons.savings, "label": "Refunds"},
   ];
   String selectedPaymentMethod = Provider.of<PaymentMethodProvider>(context, listen: false).selectedMethod;
 
@@ -87,20 +88,21 @@ void AddIncomeDialog (BuildContext context){
                           amountController.text.isNotEmpty &&
                           selectedCategory != null) {
                         double amount = double.parse(amountController.text);
-                        double newBalance = await _firestoreService.calculateNewBalance(amount, 'income', selectedPaymentMethod);
-                        await _firestoreService.addTransaction({
+                        double newBalance = await _firestoreService.calculateNewBalance(amount, 'income', selectedPaymentMethod, isBusiness: true);
+                        await _firestoreService.addBusinessCredit({
                           'title': titleController.text,
                           'amount': double.parse(amountController.text),
                           'date': DateTime.now(),
-                          'type': 'income',
+                          'type': 'credit',
                           'category': selectedCategory,
                           'paymentMethod': selectedPaymentMethod,
                           'balance': newBalance
-                        });
+                        },
+                        );
                         Navigator.pop(context);
                       }
                     },
-                    child: Text("Add Income",
+                    child: Text("Add Credit",
                       style: TextStyle(color: Colors.white),
                     ))
               ],

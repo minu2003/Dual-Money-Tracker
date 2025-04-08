@@ -9,8 +9,8 @@ import '../../Provider/firestore_services.dart';
 import '../../Provider/transaction_period_provider.dart';
 import '../../components/bottom_navbar.dart';
 import '../../components/currency_provider.dart';
-import 'business_income_expense/B_Expense_add.dart';
-import 'business_income_expense/B_Income_add.dart';
+import 'business_income_expense/debit_add.dart';
+import 'business_income_expense/credit_add.dart';
 import 'components/recentTransaction.dart';
 import 'components/B_appbar.dart';
 
@@ -384,7 +384,7 @@ class _DropdownExampleState extends State<DropdownExample> {
                 ],
               ),
             ),
-            recentTransactions()
+            recentTransactions(isBusiness: true,)
           ],
         ),
       ),
@@ -399,7 +399,7 @@ class _DropdownExampleState extends State<DropdownExample> {
               scale: 1.8,
               child: FloatingActionButton(
                 onPressed: () {
-                  AddExpenseDialog(context);
+                  AddDebitDialog(context);
                 },
                 backgroundColor: Colors.white,
                 shape: const CircleBorder(),
@@ -413,7 +413,7 @@ class _DropdownExampleState extends State<DropdownExample> {
               scale: 1.8,
               child: FloatingActionButton(
                 onPressed: () {
-                  AddIncomeDialog(context);
+                  AddCreditDialog(context);
                 },
                 backgroundColor: Colors.white,
                 shape: const CircleBorder(),

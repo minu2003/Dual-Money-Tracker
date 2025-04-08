@@ -8,7 +8,10 @@ import '../../../Provider/transaction_period_provider.dart';
 import '../../../components/currency_provider.dart';
 
 class recentTransactions extends StatelessWidget {
+  final bool isBusiness;
   final FirestoreService _firestoreService = FirestoreService();
+
+  recentTransactions({this.isBusiness = false});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +22,13 @@ class recentTransactions extends StatelessWidget {
     final selectedYear = Provider.of<TransactionPeriodProvider>(context).selectedYear ?? DateTime(DateTime.now().year);
 
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestoreService.getTransactions(selectedPaymentMethod, selectedDate, selectedMonth, selectedYear),
+      stream: _firestoreService.getTransactions(
+        selectedPaymentMethod,
+        selectedDate,
+        selectedMonth,
+        selectedYear,
+        isBusiness: isBusiness,
+      ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -35,9 +44,9 @@ class recentTransactions extends StatelessWidget {
           return Center(child: Text("No recent transactions"));
         }
 
-        List<Map<String,dynamic>> transactionsList = transactions.map((doc){
+        List<Map<String,dynamic>> transactionsList = transactions.map((doc) {
           final data = doc.data() as Map<String, dynamic>;
-          return{
+          return {
             'title': data['title'],
             'amount': data['amount'],
             'type': data['type'],
@@ -48,20 +57,20 @@ class recentTransactions extends StatelessWidget {
         if (selectedDate != null) {
           transactionsList = transactionsList.where((transaction) {
             DateTime transactionDate = transaction['date'];
-            return transactionDate.year == selectedDate!.year &&
-                transactionDate.month == selectedDate!.month &&
-                transactionDate.day == selectedDate!.day;
+            return transactionDate.year == selectedDate.year &&
+                transactionDate.month == selectedDate.month &&
+                transactionDate.day == selectedDate.day;
           }).toList();
         } else if (selectedMonth != null && selectedYear != null) {
           transactionsList = transactionsList.where((transaction) {
             DateTime transactionDate = transaction['date'];
-            return transactionDate.month == selectedMonth!.month &&
-                transactionDate.year == selectedYear!.year;
+            return transactionDate.month == selectedMonth.month &&
+                transactionDate.year == selectedYear.year;
           }).toList();
         } else if (selectedYear != null) {
           transactionsList = transactionsList.where((transaction) {
             DateTime transactionDate = transaction['date'];
-            return transactionDate.year == selectedYear!.year;
+            return transactionDate.year == selectedYear.year;
           }).toList();
         }
 
@@ -70,17 +79,18 @@ class recentTransactions extends StatelessWidget {
         double balance = 0.0;
 
         for (var transaction in transactionsList) {
-          double amount = transaction['amount'] ?? 0.0;
-          String type = transaction['type'] ?? 0.0;
+          double amount = (transaction['amount'] ?? 0.0).abs();
+          String type = (transaction['type'] ?? '').toString().toLowerCase().trim();
 
-          if (type == 'income') {
+          if (type == 'credit') {
             balance += amount;
-          } else if (type == 'expense') {
-            balance -= amount.abs();
+          } else if (type == 'debit') {
+            balance -= amount;
           }
 
           transaction['balance'] = balance;
         }
+
         transactionsList = transactionsList.reversed.toList();
         final recentTransactions = transactionsList.take(10).toList();
 
@@ -110,10 +120,10 @@ class recentTransactions extends StatelessWidget {
                       Row(
                         children: [
                           CircleAvatar(
-                            backgroundColor: transaction['type'] == 'income' ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+                            backgroundColor: transaction['type'] == 'credit' ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
                             child: Icon(
-                              transaction['type'] == 'income' ? Icons.arrow_upward : Icons.arrow_downward,
-                              color: transaction['type'] == 'income' ? Colors.green : Colors.red,
+                              transaction['type'] == 'credit' ? Icons.arrow_upward : Icons.arrow_downward,
+                              color: transaction['type'] == 'credit' ? Colors.green : Colors.red,
                             ),
                           ),
                           SizedBox(width: 10),
@@ -131,9 +141,9 @@ class recentTransactions extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            "${transaction['type'] == 'expense' ? '-' : '+'} $currency ${(transaction['amount'] ?? 0.0).toStringAsFixed(2)}",
+                            "${transaction['type'] == 'debit' ? '-' : '+'} $currency ${(transaction['amount'] ?? 0.0).abs().toStringAsFixed(2)}",
                             style: TextStyle(
-                              color: transaction['type'] == 'expense' ? Colors.red : Colors.green,
+                              color: transaction['type'] == 'debit' ? Colors.red : Colors.green,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

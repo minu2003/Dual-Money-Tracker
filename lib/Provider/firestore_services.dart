@@ -5,6 +5,7 @@ class FirestoreService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  //personal
   CollectionReference _getUserTransactionsCollection(String paymentMethod) {
     User? user = _auth.currentUser;
     if (user != null) {
@@ -18,21 +19,6 @@ class FirestoreService {
       throw Exception('No authenticated user found');
     }
   }
-
-  CollectionReference _getBusinessTransactionsCollection(String paymentMethod){
-    User? user = _auth.currentUser;
-    if(user != null){
-      return _firestore
-          .collection('users')
-          .doc(user.uid)
-          .collection('Business_Transactions')
-          .doc(paymentMethod)
-          .collection('transactions');
-    }else{
-      throw Exception('No authenticated user found');
-    }
-  }
-
   Future<void> addTransaction(Map<String, dynamic> transaction, {bool isBusiness = false}) async {
     try {
       String paymentMethod = transaction['paymentMethod'] ?? 'Cash';
@@ -121,6 +107,31 @@ class FirestoreService {
       });
     } catch (e) {
       throw Exception('Failed to get financial summary: $e');
+    }
+  }
+  //Business
+  CollectionReference _getBusinessTransactionsCollection(String paymentMethod){
+    User? user = _auth.currentUser;
+    if(user != null){
+      return _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('Business_Transactions')
+          .doc(paymentMethod)
+          .collection('transactions');
+    }else{
+      throw Exception('No authenticated user found');
+    }
+  }
+
+  Future<void> addBusinessCredit(Map<String, dynamic> transaction) async {
+    try {
+      String paymentMethod = transaction['paymentMethod'] ?? 'Cash';
+      CollectionReference creditsCollection = _getBusinessTransactionsCollection(paymentMethod);
+      DocumentReference newTransaction = await creditsCollection.add(transaction);
+      print("Business credit added: ${newTransaction.id}");
+    } catch (e) {
+      throw Exception('Failed to add business credit: $e');
     }
   }
 }
