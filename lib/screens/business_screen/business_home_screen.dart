@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:money_app/components/drawer_screen.dart';
 import 'package:money_app/components/recent_transaction.dart';
+import 'package:money_app/screens/business_screen/components/B_bottom_navbar.dart';
 import 'package:money_app/screens/business_screen/credit_debit/credit_debit.dart';
 import 'package:money_app/screens/view/income_expense/income_expemses.dart';
 import 'package:provider/provider.dart';
@@ -389,7 +390,7 @@ class _DropdownExampleState extends State<DropdownExample> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavBar(),
+      bottomNavigationBar: B_BottomNavBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 65),
