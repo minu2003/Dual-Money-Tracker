@@ -5,7 +5,6 @@ class FirestoreService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Personal and Business transaction collections
   CollectionReference _getTransactionsCollection(String paymentMethod, {bool isBusiness = false}) {
     User? user = _auth.currentUser;
     if (user != null) {
@@ -23,7 +22,6 @@ class FirestoreService {
     }
   }
 
-  // Add transaction for personal or business
   Future<void> addTransaction(Map<String, dynamic> transaction, {bool isBusiness = false}) async {
     try {
       String paymentMethod = transaction['paymentMethod'] ?? 'Cash';
@@ -35,7 +33,6 @@ class FirestoreService {
     }
   }
 
-  // Get transactions for personal or business based on filters (date, month, year)
   Stream<QuerySnapshot> getTransactions(
       String paymentMethod,
       DateTime? selectedDate,
@@ -63,7 +60,6 @@ class FirestoreService {
     }
   }
 
-  // Calculate balance after adding an income or expense
   Future<double> calculateNewBalance(double amount, String type, String paymentMethod, {bool isBusiness = false}) async {
     try {
       CollectionReference transactionsCollection = _getTransactionsCollection(paymentMethod, isBusiness: isBusiness);
@@ -81,7 +77,6 @@ class FirestoreService {
     }
   }
 
-  // Get financial summary (income, expenses, balance) for personal or business
   Stream<Map<String, double>> getFinancialSummary(String paymentMethod, {bool isBusiness = false}) {
     try {
       CollectionReference transactionsCollection = _getTransactionsCollection(paymentMethod, isBusiness: isBusiness);
@@ -113,7 +108,6 @@ class FirestoreService {
     }
   }
 
-  // Add business credit
   Future<void> addBusinessCredit(Map<String, dynamic> transaction) async {
     try {
       String paymentMethod = transaction['paymentMethod'] ?? 'Cash';
