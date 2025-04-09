@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:money_app/components/PieCharts/AllTransactionPieChart.dart';
 
+import 'Business_Piecharts/B_AllTransactionpiechart.dart';
 import 'Business_Piecharts/CreditPiechart.dart';
 import 'Business_Piecharts/DebitPiechart.dart';
 
@@ -86,7 +87,7 @@ class _PiechartScreenState extends State<piechartScreen>
                   child: TabBarView(
                       controller: _tabController,
                       children: [
-                        AllTransactionsPieChart(
+                        B_AllTransactionsPieChart(
                             paymentMethod: 'Cash'
                         ),
                         creditPieChart(paymentMethod: 'Cash'),

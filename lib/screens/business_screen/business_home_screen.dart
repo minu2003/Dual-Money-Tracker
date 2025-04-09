@@ -11,6 +11,7 @@ import '../../Provider/firestore_services.dart';
 import '../../Provider/transaction_period_provider.dart';
 import '../../components/bottom_navbar.dart';
 import '../../components/currency_provider.dart';
+import 'components/B_drawer.dart';
 import 'components/recentTransaction.dart';
 import 'components/B_appbar.dart';
 import 'credit_debit/credit_add.dart';
@@ -138,7 +139,7 @@ class _DropdownExampleState extends State<DropdownExample> {
   Widget build(BuildContext context) {
     final currency = Provider.of<CurrencyProvider>(context).currency;
     return Scaffold(
-      drawer: DrawerScreen(onPaymentMethodChanged: handlePaymentMethodChange),
+      drawer: B_DrawerScreen(onPaymentMethodChanged: handlePaymentMethodChange),
       appBar: customAppBar(onAccountChanged: handleAccountChange, currentAccount: currentAccount,),
       body: Container(
         color: Color(0xFFF5F5F5),

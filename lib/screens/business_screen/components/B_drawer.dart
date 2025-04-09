@@ -6,19 +6,20 @@ import 'package:provider/provider.dart';
 import 'package:money_app/Authentication/sign_in.dart';
 import 'package:money_app/screens/view/home_screen.dart';
 import 'package:money_app/screens/view/settings.dart' as settings_screen;
-import '../Provider/paymentMethod_provider.dart';
-import '../Provider/transaction_period_provider.dart';
-import 'currency_provider.dart';
 
-class DrawerScreen extends StatefulWidget {
+import '../../../Provider/paymentMethod_provider.dart';
+import '../../../Provider/transaction_period_provider.dart';
+import '../../../components/currency_provider.dart';
+
+class B_DrawerScreen extends StatefulWidget {
   final Function(String)? onPaymentMethodChanged;
-  const DrawerScreen({super.key, this.onPaymentMethodChanged});
+  const B_DrawerScreen({super.key, this.onPaymentMethodChanged});
 
   @override
-  State<DrawerScreen> createState() => _DrawerScreenState();
+  State<B_DrawerScreen> createState() => _DrawerScreenState();
 }
 
-class _DrawerScreenState extends State<DrawerScreen> {
+class _DrawerScreenState extends State<B_DrawerScreen> {
   DateTime? selectedDate;
   DateTime? selectedMonth;
   DateTime? selectedYear;
@@ -195,6 +196,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
     return [
       _buildDropdownItem("Cash", Icons.money, Colors.green, currency),
       _buildDropdownItem("Payment Card", Icons.credit_card, Colors.red, currency),
+      _buildDropdownItem("Check", Icons.monetization_on, Colors.blue, currency),
 
     ];
   }
