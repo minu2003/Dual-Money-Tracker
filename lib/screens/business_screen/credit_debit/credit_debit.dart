@@ -317,11 +317,23 @@ class _CreditDebitScreenState extends State<credit_debit> with SingleTickerProvi
                             return [
                               PopupMenuItem<String>(
                                 value: 'edit',
-                                child: Text('Edit'),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.edit, color: Colors.black54, size: 20,),
+                                    SizedBox(width: 8,),
+                                    Text('Edit'),
+                                  ],
+                                ),
                               ),
                               PopupMenuItem<String>(
                                 value: 'delete',
-                                child: Text('Delete'),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.delete, color: Colors.black54, size: 20,),
+                                    SizedBox(width: 8,),
+                                    Text('Delete'),
+                                  ],
+                                ),
                               ),
                             ];
                           },

@@ -131,6 +131,30 @@ class _DropdownExampleState extends State<DropdownExample> {
     print("Switched to payment method: $selectedPaymentMethod");
   }
 
+  String getFormattedPeriod(BuildContext context) {
+    final periodProvider = Provider.of<TransactionPeriodProvider>(context);
+    final selectedDate = periodProvider.selectedDate;
+    final selectedMonth = periodProvider.selectedMonth;
+    final selectedYear = periodProvider.selectedYear;
+
+    if(selectedDate != null){
+      return "${_getMonthName(selectedDate.month)} ${selectedDate.day}, ${selectedDate.year}";
+    }else if(selectedMonth != null){
+      return "${_getMonthName(selectedMonth.month)} ${selectedMonth.year}";
+    }else if (selectedYear != null) {
+      return "${selectedYear.year}";
+    }else {
+      final now = DateTime.now();
+      return "${_getMonthName(now.month)} ${now.year}";
+    }
+  }
+  String _getMonthName(int month) {
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    return monthNames[month - 1];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,22 +181,14 @@ class _DropdownExampleState extends State<DropdownExample> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "April",
-                    style: TextStyle(color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-
-                    ),
-                  ),
-                  Text(
-                    "Month",
+                    getFormattedPeriod(context),
                     style: TextStyle(color: Colors.white,
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
-                      height: 0.9,
+
                     ),
                   ),
-
+                  SizedBox(height: 8,),
                   Center(
                     child: Text("Balance",
                       style: TextStyle(color: Colors.white,
