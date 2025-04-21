@@ -8,6 +8,7 @@ import '../../../Provider/paymentMethod_provider.dart';
 import '../../../Provider/transaction_period_provider.dart';
 import '../../../components/bottom_navbar.dart';
 import '../../../components/currency_provider.dart';
+import '../../../components/edit_transaction.dart';
 import 'expense_add.dart';
 import 'income_add.dart';
 
@@ -198,7 +199,11 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
         ),
         Expanded(
           child: StreamBuilder<QuerySnapshot>(
-            stream: _firestoreService.getTransactions(selectedPaymentMethod, selectedDate, selectedMonth, selectedYear),
+            stream: _firestoreService.getTransactions(
+                selectedPaymentMethod,
+                selectedDate,
+                selectedMonth,
+                selectedYear),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
@@ -236,6 +241,7 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
                 itemCount: transactions.length,
                 itemBuilder: (context, index) {
                   final transaction = transactions[index].data() as Map<String, dynamic>;
+                  final transactionId = transactions[index].id;
                   final date = (transaction['date'] as Timestamp).toDate();
                   final formattedDate =
                   DateFormat("MMMM d, yyyy h:mm a").format(date);
@@ -289,6 +295,40 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
                             color: type == 'expense' ? Colors.red : Colors.green,
                             fontWeight: FontWeight.bold,
                           ),
+                        ),
+                        PopupMenuButton<String>(
+                          icon: Icon(Icons.more_vert),
+                          onSelected: (String value) {
+                            if (value == 'edit') {
+                              showEditTransactionDialog(
+                                context,
+                                transactionId,
+                                transaction,
+                                _firestoreService,
+                                selectedPaymentMethod,
+                                currentAccount,
+                                isBusiness: false,
+                                categoryList: type == 'income' ? incomes : expenses,
+                              );
+                            } else if (value == 'delete') {
+                              _firestoreService.deleteTransaction(
+                                transactionId,
+                                selectedPaymentMethod,
+                              );
+                            }
+                          },
+                          itemBuilder: (BuildContext context) {
+                            return [
+                              PopupMenuItem<String>(
+                                value: 'edit',
+                                child: Text('Edit'),
+                              ),
+                              PopupMenuItem<String>(
+                                value: 'delete',
+                                child: Text('Delete'),
+                              ),
+                            ];
+                          },
                         ),
                       ],
                     ),

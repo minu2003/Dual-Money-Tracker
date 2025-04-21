@@ -54,7 +54,7 @@ class B_BottomNavBar extends StatelessWidget {
                 icon: GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => piechartScreen())
+                        MaterialPageRoute(builder: (context) => businessPiechartScreen())
                     );
                   },
                   child: Container(

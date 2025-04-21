@@ -10,8 +10,13 @@ class customAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return AppBar(
-      backgroundColor: const Color(0xFFECECEC),
+      backgroundColor: isDarkMode ? Colors.grey[900] : const Color(0xFFECECEC),
+      iconTheme: IconThemeData(
+        color: isDarkMode ? Colors.white : Colors.black,
+      ),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

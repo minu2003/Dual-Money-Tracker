@@ -5,15 +5,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Function(String) onAccountChanged;
   final String currentAccount;
 
-  const CustomAppBar({Key? key,
+  const CustomAppBar({
+    Key? key,
     required this.onAccountChanged,
-    required this.currentAccount,})
-      : super(key: key);
+    required this.currentAccount,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return AppBar(
-      backgroundColor: const Color(0xFFECECEC),
+      backgroundColor: isDarkMode ? Colors.grey[900] : const Color(0xFFECECEC),
+      iconTheme: IconThemeData(
+        color: isDarkMode ? Colors.white : Colors.black,
+      ),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -25,7 +31,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
       actions: [
-        AccountSwitcher(onAccountChanged: onAccountChanged, initialValue: currentAccount,),
+        AccountSwitcher(
+          onAccountChanged: onAccountChanged,
+          initialValue: currentAccount,
+        ),
       ],
     );
   }

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:money_app/Authentication/sign_in.dart';
 import 'package:money_app/screens/view/home_screen.dart';
+import 'package:money_app/theme/theme_mode_provider.dart';
 import 'package:provider/provider.dart';
 import 'Provider/paymentMethod_provider.dart';
 import 'Provider/transaction_period_provider.dart';
@@ -21,6 +22,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => PaymentMethodProvider()),
         ChangeNotifierProvider(create: (context) => CurrencyProvider()..loadCurrency()),
         ChangeNotifierProvider(create: (context) => TransactionPeriodProvider()),
+        ChangeNotifierProvider(create: (context) => ThemeModeProvider())
       ],
       child: MyApp(),
     ),
@@ -37,10 +39,18 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Money Tracker',
-      home: login()
+    return Consumer<ThemeModeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Money Tracker',
+          themeMode: themeProvider.themeMode,
+          theme: ThemeData.light(),
+          darkTheme: ThemeData.dark(),
+          home: const login(),
+        );
+      },
     );
   }
 }
+

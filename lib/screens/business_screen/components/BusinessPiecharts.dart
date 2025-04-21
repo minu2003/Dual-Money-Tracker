@@ -27,15 +27,15 @@ class categoryColors{
   ];
 }
 
-class piechartScreen extends StatefulWidget {
+class businessPiechartScreen extends StatefulWidget {
   final int initialTabIndex;
-  const piechartScreen({super.key, this.initialTabIndex = 0});
+  const businessPiechartScreen({super.key, this.initialTabIndex = 0});
 
   @override
-  State<piechartScreen> createState() => _PiechartScreenState();
+  State<businessPiechartScreen> createState() => _PiechartScreenState();
 }
 
-class _PiechartScreenState extends State<piechartScreen>
+class _PiechartScreenState extends State<businessPiechartScreen>
     with SingleTickerProviderStateMixin{
   late TabController _tabController;
 

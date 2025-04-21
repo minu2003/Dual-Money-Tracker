@@ -10,6 +10,7 @@ import '../../../Provider/paymentMethod_provider.dart';
 import '../../../Provider/transaction_period_provider.dart';
 import '../../../components/bottom_navbar.dart';
 import '../../../components/currency_provider.dart';
+import '../../../components/edit_transaction.dart';
 
 class credit_debit extends StatefulWidget {
   final int initialTabIndex;
@@ -237,6 +238,7 @@ class _CreditDebitScreenState extends State<credit_debit> with SingleTickerProvi
                 itemCount: transactions.length,
                 itemBuilder: (context, index) {
                   final transaction = transactions[index].data() as Map<String, dynamic>;
+                  final transactionId = transactions[index].id;
                   final date = (transaction['date'] as Timestamp).toDate();
                   final formattedDate = DateFormat("MMMM d, yyyy h:mm a").format(date);
 
@@ -289,6 +291,40 @@ class _CreditDebitScreenState extends State<credit_debit> with SingleTickerProvi
                             color: transaction['type'] == 'debit' ? Colors.red : Colors.green,
                             fontWeight: FontWeight.bold,
                           ),
+                        ),
+                        PopupMenuButton<String>(
+                          icon: Icon(Icons.more_vert),
+                          onSelected: (String value) {
+                            if (value == 'edit') {
+                              businessEditTransactionDialog(
+                                context,
+                                transactionId,
+                                transaction,
+                                _firestoreService,
+                                selectedPaymentMethod,
+                                currentAccount,
+                                isBusiness: true,
+                                categoryList: type == 'credit' ? credit : debit,
+                              );
+                            } else if (value == 'delete') {
+                              _firestoreService.deleteTransaction(
+                                transactionId,
+                                selectedPaymentMethod,
+                              );
+                            }
+                          },
+                          itemBuilder: (BuildContext context) {
+                            return [
+                              PopupMenuItem<String>(
+                                value: 'edit',
+                                child: Text('Edit'),
+                              ),
+                              PopupMenuItem<String>(
+                                value: 'delete',
+                                child: Text('Delete'),
+                              ),
+                            ];
+                          },
                         ),
                       ],
                     ),

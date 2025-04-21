@@ -118,4 +118,25 @@ class FirestoreService {
       throw Exception('Failed to add business credit: $e');
     }
   }
+
+  Future<void> updateTransaction(String transactionId, Map<String, dynamic> updatedData, String paymentMethod, {bool isBusiness = false}) async {
+    try {
+      CollectionReference transactionsCollection = _getTransactionsCollection(paymentMethod, isBusiness: isBusiness);
+      await transactionsCollection.doc(transactionId).update(updatedData);
+      print("Transaction updated: $transactionId");
+    } catch (e) {
+      throw Exception('Failed to update transaction: $e');
+    }
+  }
+
+  Future<void> deleteTransaction(String transactionId, String paymentMethod, {bool isBusiness = false}) async {
+    try {
+      CollectionReference transactionsCollection = _getTransactionsCollection(paymentMethod, isBusiness: isBusiness);
+      await transactionsCollection.doc(transactionId).delete();
+      print("Transaction deleted: $transactionId");
+    } catch (e) {
+      throw Exception('Failed to delete transaction: $e');
+    }
+  }
+
 }

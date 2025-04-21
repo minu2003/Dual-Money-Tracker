@@ -23,10 +23,7 @@ class BusinessHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: DropdownExample(onAccountChanged: onAccountChanged),
-    );
+    return DropdownExample(onAccountChanged: onAccountChanged);
   }
 }
 
@@ -160,7 +157,7 @@ class _DropdownExampleState extends State<DropdownExample> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "February",
+                    "April",
                     style: TextStyle(color: Colors.white,
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
