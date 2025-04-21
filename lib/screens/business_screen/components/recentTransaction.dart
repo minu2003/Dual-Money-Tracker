@@ -82,6 +82,8 @@ class recentTransactions extends StatelessWidget {
           double amount = (transaction['amount'] ?? 0.0).abs();
           String type = (transaction['type'] ?? '').toString().toLowerCase().trim();
 
+          transaction['type'] = type;
+
           if (type == 'credit') {
             balance += amount;
           } else if (type == 'debit') {

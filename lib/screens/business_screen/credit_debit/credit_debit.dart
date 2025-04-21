@@ -286,9 +286,9 @@ class _CreditDebitScreenState extends State<credit_debit> with SingleTickerProvi
                           ],
                         ),
                         Text(
-                          "${transaction['type'] == 'debit' ? '-' : '+'} $currency ${(transaction['amount'] ?? 0.0).toStringAsFixed(2)}",
+                          "${transaction['type']?.toLowerCase() == 'debit' ? '-' : '+'} $currency ${(transaction['amount'] ?? 0.0).toStringAsFixed(2)}",
                           style: TextStyle(
-                            color: transaction['type'] == 'debit' ? Colors.red : Colors.green,
+                            color: transaction['type']?.toLowerCase() == 'debit' ? Colors.red : Colors.green,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
