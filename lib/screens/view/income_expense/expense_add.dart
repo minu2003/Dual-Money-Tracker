@@ -9,6 +9,7 @@ void showAddExpenseDialog (BuildContext context){
   String? selectedCategory;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
+  bool isRecurring = false;
 
   final List<Map<String, dynamic>> categories = [
     {"icon": Icons.local_gas_station, "label": "Gas-Filling"},
@@ -86,6 +87,14 @@ void showAddExpenseDialog (BuildContext context){
                     selectedCategory = value;
                   },
                 ),
+                SwitchListTile(
+                  title: Text("Recurring"),
+                  value: isRecurring,
+                  onChanged: (bool value) {
+                  isRecurring = value;
+                  (context as Element).markNeedsBuild();
+                  },
+                ),
                 SizedBox(height: 20,),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -102,7 +111,7 @@ void showAddExpenseDialog (BuildContext context){
                         double amount = double.parse(amountController.text);
                         double newBalance = await _firestoreService.calculateNewBalance(amount, 'expense', selectedPaymentMethod);
 
-                        await _firestoreService.addTransaction({
+                        final transactionData = {
                           'title': titleController.text,
                           'amount': -double.parse(amountController.text),
                           'date': DateTime.now(),
@@ -110,7 +119,10 @@ void showAddExpenseDialog (BuildContext context){
                           'category': selectedCategory,
                           'paymentMethod': selectedPaymentMethod,
                           'balance' : newBalance,
-                        });
+                          'isRecurring': isRecurring,
+                          'recurringFrequency': isRecurring ? 'monthly' : null,
+                        };
+                        await _firestoreService.addTransaction(transactionData);
                         Navigator.pop(context);
                       }
                     },

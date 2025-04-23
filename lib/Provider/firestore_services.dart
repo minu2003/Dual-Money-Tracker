@@ -139,4 +139,28 @@ class FirestoreService {
     }
   }
 
+  Future<void> addRecurringTransaction(Map<String, dynamic> transaction, {bool isBusiness = false}) async {
+    try {
+      User? user = _auth.currentUser;
+      if (user != null) {
+        String collectionPath = isBusiness ? 'Business_Recurring' : 'Recurring_Transactions';
+        await _firestore
+            .collection('users')
+            .doc(user.uid)
+            .collection(collectionPath)
+            .add({
+          ...transaction,
+          'isRecurring': true,
+          'recurringFrequency': 'monthly',
+          'createdAt': DateTime.now(),
+        });
+        print("Monthly recurring transaction added.");
+      } else {
+        throw Exception('No authenticated user found');
+      }
+    } catch (e) {
+      throw Exception('Failed to add recurring transaction: $e');
+    }
+  }
+
 }

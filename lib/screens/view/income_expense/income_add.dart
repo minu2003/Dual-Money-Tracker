@@ -9,6 +9,7 @@ void showAddIncomeDialog (BuildContext context){
   String? selectedCategory;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
+  bool isRecurring = false;
 
   final List<Map<String, dynamic>> categories = [
     {"icon": Icons.account_balance, "label": "Deposits"},
@@ -74,6 +75,14 @@ void showAddIncomeDialog (BuildContext context){
                     selectedCategory = value;
                   },
                 ),
+                SwitchListTile(
+                  title: Text("Recurring"),
+                  value: isRecurring,
+                  onChanged: (bool value) {
+                    isRecurring = value;
+                    (context as Element).markNeedsBuild();
+                  },
+                ),
                 SizedBox(height: 20,),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -88,15 +97,20 @@ void showAddIncomeDialog (BuildContext context){
                           selectedCategory != null) {
                         double amount = double.parse(amountController.text);
                         double newBalance = await _firestoreService.calculateNewBalance(amount, 'income', selectedPaymentMethod);
-                        await _firestoreService.addTransaction({
+
+                        final transactionData = {
                           'title': titleController.text,
-                          'amount': double.parse(amountController.text),
+                          'amount': amount,
                           'date': DateTime.now(),
                           'type': 'income',
                           'category': selectedCategory,
                           'paymentMethod': selectedPaymentMethod,
-                          'balance': newBalance
-                        });
+                          'balance': newBalance,
+                          'isRecurring': isRecurring,
+                          'recurringFrequency': isRecurring ? 'monthly' : null,
+                        };
+
+                        await _firestoreService.addTransaction(transactionData);
                         Navigator.pop(context);
                       }
                     },
