@@ -303,13 +303,13 @@ class _CreditDebitScreenState extends State<credit_debit> with SingleTickerProvi
                                 _firestoreService,
                                 selectedPaymentMethod,
                                 currentAccount,
-                                isBusiness: true,
                                 categoryList: type == 'credit' ? credit : debit,
                               );
                             } else if (value == 'delete') {
                               _firestoreService.deleteTransaction(
                                 transactionId,
                                 selectedPaymentMethod,
+                                isBusiness: true,
                               );
                             }
                           },

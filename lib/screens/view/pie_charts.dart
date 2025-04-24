@@ -1,6 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:money_app/components/PieCharts/AllTransactionPieChart.dart';
+import 'package:provider/provider.dart';
+import '../../Provider/paymentMethod_provider.dart';
 import '../../components/PieCharts/ExpensePieChart.dart';
 import '../../components/PieCharts/IncomePieChart.dart';
 
@@ -52,6 +54,7 @@ class _PiechartScreenState extends State<PiechartScreen>
 
   @override
   Widget build(BuildContext context) {
+    final selectedMethod = Provider.of<PaymentMethodProvider>(context).selectedMethod;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFECECEC),
@@ -89,10 +92,10 @@ class _PiechartScreenState extends State<PiechartScreen>
                       controller: _tabController,
                       children: [
                         AllTransactionsPieChart(
-                            paymentMethod: 'Cash'
+                            paymentMethod: selectedMethod
                         ),
-                        IncomePieChart(paymentMethod: 'Cash'),
-                        ExpensePieChart(paymentMethod: 'Cash'),
+                        IncomePieChart(paymentMethod: selectedMethod),
+                        ExpensePieChart(paymentMethod: selectedMethod),
                       ]))
             ],
           )),

@@ -9,6 +9,7 @@ void AddDebitDialog (BuildContext context){
   String? selectedCategory;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
+  bool isRecurring = false;
 
   final List<Map<String, dynamic>> categories = [
     {"icon": Icons.house, "label": "Rent"},
@@ -82,6 +83,14 @@ void AddDebitDialog (BuildContext context){
                     selectedCategory = value;
                   },
                 ),
+                SwitchListTile(
+                    title: Text("Recurring"),
+                    value: isRecurring,
+                    onChanged: (bool value){
+                      isRecurring = value;
+                      (context as Element).markNeedsBuild();
+                    }
+                    ),
                 SizedBox(height: 20,),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -106,6 +115,8 @@ void AddDebitDialog (BuildContext context){
                           'category': selectedCategory,
                           'paymentMethod': selectedPaymentMethod,
                           'balance' : newBalance,
+                          'isRecurring': isRecurring,
+                          'recurringFrequency': isRecurring ? 'monthly' : null,
                         });
                         Navigator.pop(context);
                       }

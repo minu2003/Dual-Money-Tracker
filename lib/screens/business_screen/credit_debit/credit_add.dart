@@ -9,6 +9,7 @@ void AddCreditDialog (BuildContext context){
   String? selectedCategory;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
+  bool isRecurring = false;
 
   final List<Map<String, dynamic>> categories = [
     {"icon": Icons.account_balance, "label": "Sales Revenue"},
@@ -75,6 +76,14 @@ void AddCreditDialog (BuildContext context){
                     selectedCategory = value;
                   },
                 ),
+                SwitchListTile(
+                    title: Text("Recurring"),
+                    value: isRecurring,
+                    onChanged: (bool value){
+                      isRecurring = value;
+                      (context as Element).markNeedsBuild();
+                    }
+                    ),
                 SizedBox(height: 20,),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -96,7 +105,9 @@ void AddCreditDialog (BuildContext context){
                           'type': 'credit',
                           'category': selectedCategory,
                           'paymentMethod': selectedPaymentMethod,
-                          'balance': newBalance
+                          'balance': newBalance,
+                          'isRecurring': isRecurring,
+                          'recurringFrequency': isRecurring ? 'monthly' : null,
                         },
                         );
                         Navigator.pop(context);
