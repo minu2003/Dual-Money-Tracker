@@ -43,24 +43,34 @@ void showAddExpenseDialog (BuildContext context){
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
+                  cursorColor: Colors.blue,
                   controller: titleController,
                   decoration: InputDecoration(
                     labelText: 'Title',
                     labelStyle: TextStyle(
                         fontSize: 14
                     ),
+                    floatingLabelStyle: TextStyle(color: Colors.blue),
                     border: UnderlineInputBorder(),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue), // Change to blue
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16.0),
                 TextField(
+                  cursorColor: Colors.blue,
                   controller: amountController,
                   decoration: const InputDecoration(
                     labelText: 'Amount',
                     labelStyle: TextStyle(
                         fontSize: 14
                     ),
+                    floatingLabelStyle: TextStyle(color: Colors.blue),
                     border: UnderlineInputBorder(),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue), // Change to blue
+                    ),
                   ),
                   keyboardType: TextInputType.number,
                 ),
@@ -68,6 +78,9 @@ void showAddExpenseDialog (BuildContext context){
                 DropdownButtonFormField<String>(
                   decoration: InputDecoration(
                     border: UnderlineInputBorder(),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue), // Change to blue
+                    ),
                   ),
                   value: selectedCategory,
                   hint: Text("Select Category"),

@@ -94,7 +94,7 @@ class RecentTransactions extends StatelessWidget {
                   margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   padding: EdgeInsets.all(15),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.tertiary,
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(

@@ -56,7 +56,7 @@ class _PiechartScreenState extends State<businessPiechartScreen>
     final selectedMethod = Provider.of<PaymentMethodProvider>(context).selectedMethod;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFFECECEC),
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -64,7 +64,7 @@ class _PiechartScreenState extends State<businessPiechartScreen>
             Padding(
               padding: const EdgeInsets.only(right: 50),
               child: Image.asset(
-                "assets/LogoBusiness.png",
+                "assets/dualLogoBusiness.png",
                 height: 50,
               ),
             ),

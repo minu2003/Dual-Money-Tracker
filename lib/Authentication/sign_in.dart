@@ -46,12 +46,12 @@ class _loginState extends State<login> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 150,
-        title: const Center(
+        title: Center(
             child: Padding(
               padding: EdgeInsets.only(top: 50),
               child: Text(
                 "Hello Again!",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40,),
               ),
             )),
       ),
@@ -63,8 +63,8 @@ class _loginState extends State<login> {
                 height: MediaQuery.of(context).size.height - kToolbarHeight - 150,
                 padding: const EdgeInsets.all(30),
                 decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                        colors: [Color(0xFF5efce8), Color(0xFF736efe)],
+                    gradient: LinearGradient(
+                        colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary],
                         begin: Alignment.bottomLeft,
                         end: Alignment.topRight),
                     borderRadius: const BorderRadius.only(
@@ -88,15 +88,16 @@ class _loginState extends State<login> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.inversePrimary,
                               borderRadius:
                               BorderRadius.circular(20),
                             ),
                             child: TextFormField(
+                              cursorColor: Colors.blue,
                               controller: _emailController,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 labelText: 'Email',
-                                labelStyle: TextStyle(color: Colors.black),
+                                labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
                                 border: InputBorder.none,
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: 10, horizontal: 20),
@@ -108,16 +109,17 @@ class _loginState extends State<login> {
                           ),
                           Container(
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.inversePrimary,
                               borderRadius:
                               BorderRadius.circular(20),
                             ),
                             child: TextFormField(
+                              cursorColor: Colors.blue,
                               controller: _passwordController,
                               obscureText: _obscureText,
                               decoration: InputDecoration(
                                 labelText: 'Password',
-                                labelStyle: const TextStyle(color: Colors.black),
+                                labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
                                 border: InputBorder.none,
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 10, horizontal: 20),
@@ -154,7 +156,7 @@ class _loginState extends State<login> {
                             height: 10,
                           ),
                           Container(
-                              height: 70,
+                              height: 60,
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
@@ -177,9 +179,9 @@ class _loginState extends State<login> {
                               GestureDetector(
                                 onTap: (){},
                                 child: Container(
-                                  padding: const EdgeInsets.all(10),
+                                  padding: EdgeInsets.all(10),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: Theme.of(context).colorScheme.inversePrimary,
                                     shape: BoxShape.circle,
                                     boxShadow: [
                                       BoxShadow(
@@ -198,7 +200,7 @@ class _loginState extends State<login> {
                                 child: Container(
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: Theme.of(context).colorScheme.inversePrimary,
                                     shape: BoxShape.circle,
                                     boxShadow: [
                                       BoxShadow(
@@ -247,7 +249,7 @@ class _loginState extends State<login> {
                           ),
                           const SizedBox(height: 30),
                           Image.asset(
-                            "assets/logowhite2.png",
+                            "assets/dual-Logo-white.png",
                             height: 60,
                             width: 150,
                           )

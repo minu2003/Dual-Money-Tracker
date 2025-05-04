@@ -47,19 +47,19 @@ class AllTransactionsPieChart extends StatelessWidget {
         }
 
         return Container(
-          color: const Color(0xFFECECEC),
+          color: Theme.of(context).colorScheme.background,
           width: double.infinity,
           padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(height: 30),
-              const Text(
+              Text(
                 'All Piechart',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 100),
@@ -90,9 +90,9 @@ class AllTransactionsPieChart extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildLegendItem('Income', Colors.green),
+                  _buildLegendItem(context, 'Income', Colors.green),
                   const SizedBox(width: 60),
-                  _buildLegendItem('Expenses', Colors.red),
+                  _buildLegendItem(context, 'Expenses', Colors.red),
                 ],
               ),
             ],
@@ -102,7 +102,7 @@ class AllTransactionsPieChart extends StatelessWidget {
     );
   }
 
-  Widget _buildLegendItem(String label, Color color) {
+  Widget _buildLegendItem( BuildContext context, String label, Color color) {
     return Row(
       children: [
         Container(
@@ -111,7 +111,7 @@ class AllTransactionsPieChart extends StatelessWidget {
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 8),
-        Text(label, style: const TextStyle(fontSize: 14, color: Colors.black)),
+        Text(label, style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface,)),
       ],
     );
   }

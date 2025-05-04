@@ -29,18 +29,15 @@ class _AccountSwitcherState extends State<AccountSwitcher> {
       margin: const EdgeInsets.only(right: 3, top: 10, bottom: 10),
       padding: const EdgeInsets.symmetric(horizontal: 6),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF5efce8), Color(0xFF736efe)],
-          begin: Alignment.bottomLeft,
-          end: Alignment.topRight,
-        ),
+        color: Colors.yellow,
         borderRadius: BorderRadius.circular(12),
       ),
       child: DropdownButton<String>(
         value: selectedValue,
         icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
         underline: const SizedBox(),
-        dropdownColor: Colors.white,
+        dropdownColor: Colors.yellow,
+        borderRadius: BorderRadius.circular(12),
         onChanged: (String? newValue) {
           if (newValue != null) {
             setState(() {

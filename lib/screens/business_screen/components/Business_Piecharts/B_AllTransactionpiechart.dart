@@ -49,19 +49,19 @@ class B_AllTransactionsPieChart extends StatelessWidget {
         }
 
         return Container(
-          color: const Color(0xFFECECEC),
+          color: Theme.of(context).colorScheme.background,
           width: double.infinity,
           padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(height: 30),
-              const Text(
+              Text(
                 'All Piechart',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 100),
@@ -92,9 +92,9 @@ class B_AllTransactionsPieChart extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildLegendItem('credit', Colors.green),
+                  _buildLegendItem(context,'credit', Colors.green),
                   const SizedBox(width: 60),
-                  _buildLegendItem('Debit', Colors.red),
+                  _buildLegendItem(context,'Debit', Colors.red),
                 ],
               ),
             ],
@@ -104,7 +104,7 @@ class B_AllTransactionsPieChart extends StatelessWidget {
     );
   }
 
-  Widget _buildLegendItem(String label, Color color) {
+  Widget _buildLegendItem(BuildContext context,String label, Color color) {
     return Row(
       children: [
         Container(
@@ -113,7 +113,7 @@ class B_AllTransactionsPieChart extends StatelessWidget {
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 8),
-        Text(label, style: const TextStyle(fontSize: 14, color: Colors.black)),
+        Text(label, style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface)),
       ],
     );
   }

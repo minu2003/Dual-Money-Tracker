@@ -13,19 +13,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return AppBar(
-      backgroundColor: isDarkMode ? Colors.grey[900] : const Color(0xFFECECEC),
+      backgroundColor: Theme.of(context).colorScheme.background,
       iconTheme: IconThemeData(
-        color: isDarkMode ? Colors.white : Colors.black,
+        color: Theme.of(context).colorScheme.onSurface,
       ),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const SizedBox(width: 5),
           Image.asset(
-            "assets/Logo.png",
+            "assets/dualLogo.png",
             height: 50,
           ),
         ],

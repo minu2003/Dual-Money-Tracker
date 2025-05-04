@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:money_app/Authentication/sign_in.dart';
 import 'package:money_app/screens/view/home_screen.dart';
+import 'package:money_app/theme/color_theme.dart';
 import 'package:money_app/theme/theme_mode_provider.dart';
 import 'package:provider/provider.dart';
 import 'Provider/paymentMethod_provider.dart';
@@ -45,8 +46,8 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           title: 'Money Tracker',
           themeMode: themeProvider.themeMode,
-          theme: ThemeData.light(),
-          darkTheme: ThemeData.dark(),
+          theme: lightMode,
+          darkTheme: darkMode,
           home: const login(),
         );
       },

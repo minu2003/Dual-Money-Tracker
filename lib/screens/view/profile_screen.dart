@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../../Authentication/sign_in.dart';
 import '../../components/AccountSwitcher.dart';
 
 class edit_profile extends StatefulWidget {
@@ -43,18 +44,24 @@ class _edit_profileState extends State<edit_profile> {
     }
   }
 
+  Future<void> _logout(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => const login()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFFECECEC),
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(width: 5),
             Image.asset(
-              "assets/Logo.png",
+              "assets/dualLogo.png",
               height: 50,
             ),
           ],
@@ -77,15 +84,15 @@ class _edit_profileState extends State<edit_profile> {
                       shape: BoxShape.circle,
                       color: Colors.yellow,
                     ),
-                    child: const Icon(Icons.person, size: 40),
+                    child: const Icon(Icons.person, size: 40, color: Colors.black),
                   ),
                   SizedBox(height: 10,),
                   Text(
                     userName, // Display the retrieved name here
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black54,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -100,34 +107,40 @@ class _edit_profileState extends State<edit_profile> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("Name:",
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black54),
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface,),
                     ),
                     const SizedBox(height: 5),
                     Text(
                       userName,
-                      style: const TextStyle(fontSize: 16, color: Colors.black87),
+                      style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface,),
                     ),
                     const SizedBox(height: 20),
-                    const Text(
+                    Text(
                       "Email:",
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black54),
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface,),
                     ),
                     const SizedBox(height: 5),
                     Text(
                       userEmail,
-                      style: const TextStyle(fontSize: 16, color: Colors.black87),
+                      style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface,),
                     ),
                     const SizedBox(height: 20),
                     // Join Date
-                    const Text(
+                    Text(
                       "Joined Date:",
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black54),
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface,),
                     ),
                     const SizedBox(height: 5),
                     Text(
                       joinDateFormatted,
-                      style: const TextStyle(fontSize: 16, color: Colors.black87),
+                      style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface,),
                     ),
+                    SizedBox(height: 200,),
+                    ListTile(
+                      leading: const Icon(Icons.logout, color: Colors.red),
+                      title: const Text("Log Out", style: TextStyle(color: Colors.red)),
+                      onTap: () => _logout(context),
+                    )
                   ],
                 ),
               ),

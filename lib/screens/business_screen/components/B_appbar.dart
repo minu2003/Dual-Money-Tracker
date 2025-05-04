@@ -22,7 +22,7 @@ class customAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           const SizedBox(width: 5),
           Image.asset(
-            "assets/LogoBusiness.png",
+            "assets/dualLogoBusiness.png",
             height: 50,
           ),
         ],

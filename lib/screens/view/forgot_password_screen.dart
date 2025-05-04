@@ -37,7 +37,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE5E4E2),
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -45,16 +45,26 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "Enter Your Email",
-                style: TextStyle(fontSize: 17),
+                "Enter Your Email. We will send you a password reset link.",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 17,),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2), // softer shadow
+                      spreadRadius: 2,
+                      blurRadius: 10,
+                      offset: Offset(0, 3), // vertical shadow
+                    ),
+                  ],
                 ),
                 child: TextFormField(
+                  cursorColor: Colors.blueAccent,
                   controller: _emailController,
                   decoration: const InputDecoration(
                     labelText: 'Email',
@@ -67,7 +77,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
               const SizedBox(height: 20),
               SizedBox(
-                height: 70,
+                height: 60,
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _resetPassword,

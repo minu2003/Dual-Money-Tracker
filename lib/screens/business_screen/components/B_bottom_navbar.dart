@@ -16,9 +16,9 @@ class B_BottomNavBar extends StatelessWidget {
       child: SizedBox(
         height: 100,
         child: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFF5efce8), Color(0xFF736efe)],
+              colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary],
               begin: Alignment.bottomLeft,
               end: Alignment.topRight,
             ),

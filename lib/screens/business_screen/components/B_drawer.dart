@@ -30,6 +30,23 @@ class _DrawerScreenState extends State<B_DrawerScreen> {
       initialDate: selectedDate ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: Theme.of(context).colorScheme.copyWith(
+              primary: Theme.of(context).colorScheme.secondary,
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.black,
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
 
     if (picked != null) {
@@ -123,70 +140,73 @@ class _DrawerScreenState extends State<B_DrawerScreen> {
   Widget build(BuildContext context) {
     return Drawer(
       child: SingleChildScrollView(
-        child: Column(
-          children: [
-            DrawerHeader(
-              child: Column(
-                children: [
-                  const CircleAvatar(radius: 40, backgroundColor: Colors.yellow, child: Icon(Icons.person, size: 40)),
-                  const SizedBox(height: 3),
-                  const Text("Welcome!"),
-                  const SizedBox(height: 3),
-                  FutureBuilder<String>(
-                    future: _getUserName(),
-                    builder: (context, snapshot) {
-                      return Text(snapshot.data ?? "");
-                    },
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: Column(
-                children: [
-                  Consumer<CurrencyProvider>(
-                    builder: (context, currencyProvider, _) {
-                      return Consumer<PaymentMethodProvider>(
-                        builder: (context, paymentMethodProvider, _) {
-                          return DropdownButton<String>(
-                            isExpanded: true,
-                            value: paymentMethodProvider.selectedMethod,
-                            underline: Container(),
-                            items: _getDropdownItems(currencyProvider.currency),
-                            onChanged: (String? newValue) {
-                              if (newValue != null) {
-                                paymentMethodProvider.setPaymentMethod(newValue);
-                                widget.onPaymentMethodChanged?.call(newValue);
-                              }
-                            },
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  _buildListTile(Icons.home, "Home", () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => HomeScreen(onAccountChanged: (String account) {})))),
-                  _buildListTile(Icons.monetization_on, "Currency", () => _showCurrencyDialog(context)),
-                  _buildListTile(Icons.settings, "Settings", () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const settings_screen.Settings()))),
-                  const SizedBox(height: 40),
-                  const Align(alignment: Alignment.centerLeft, child: Padding(padding: EdgeInsets.only(left: 18), child: Text("Viewed By", style: TextStyle(fontWeight: FontWeight.bold)))),
-                  const SizedBox(height: 20),
-                  _buildListTile(Icons.edit_calendar, selectedDate != null ? "${selectedDate!.toLocal()}".split(' ')[0] : "Choose Date", () => _selectDate(context)),
-                  _buildListTile(Icons.date_range, selectedMonth != null ? "${selectedMonth!.month}/${selectedMonth!.year}" : "Choose Month", () => _selectMonth(context)),
-                  _buildListTile(Icons.calendar_today, selectedYear != null ? "${selectedYear!.year}" : "Choose Year", () => _selectYear(context)),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 60),
-                    child: ListTile(
-                      leading: const Icon(Icons.logout, color: Colors.red),
-                      title: const Text("Log Out", style: TextStyle(color: Colors.red)),
-                      onTap: () => _logout(context),
+        child: Container(
+          color: Theme.of(context).colorScheme.tertiary,
+          child: Column(
+            children: [
+              DrawerHeader(
+                child: Column(
+                  children: [
+                    const CircleAvatar(radius: 40, backgroundColor: Colors.yellow, child: Icon(Icons.person, size: 40)),
+                    const SizedBox(height: 3),
+                    const Text("Welcome!"),
+                    const SizedBox(height: 3),
+                    FutureBuilder<String>(
+                      future: _getUserName(),
+                      builder: (context, snapshot) {
+                        return Text(snapshot.data ?? "");
+                      },
                     ),
-                  )
-                ],
+                  ],
+                ),
               ),
-            )
-          ],
+              Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Column(
+                  children: [
+                    Consumer<CurrencyProvider>(
+                      builder: (context, currencyProvider, _) {
+                        return Consumer<PaymentMethodProvider>(
+                          builder: (context, paymentMethodProvider, _) {
+                            return DropdownButton<String>(
+                              isExpanded: true,
+                              value: paymentMethodProvider.selectedMethod,
+                              underline: Container(),
+                              items: _getDropdownItems(currencyProvider.currency),
+                              onChanged: (String? newValue) {
+                                if (newValue != null) {
+                                  paymentMethodProvider.setPaymentMethod(newValue);
+                                  widget.onPaymentMethodChanged?.call(newValue);
+                                }
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    _buildListTile(Icons.home, "Home", () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => HomeScreen(onAccountChanged: (String account) {})))),
+                    _buildListTile(Icons.monetization_on, "Currency", () => _showCurrencyDialog(context)),
+                    _buildListTile(Icons.settings, "Settings", () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const settings_screen.Settings()))),
+                    const SizedBox(height: 40),
+                    const Align(alignment: Alignment.centerLeft, child: Padding(padding: EdgeInsets.only(left: 18), child: Text("Viewed By", style: TextStyle(fontWeight: FontWeight.bold)))),
+                    const SizedBox(height: 20),
+                    _buildListTile(Icons.edit_calendar, selectedDate != null ? "${selectedDate!.toLocal()}".split(' ')[0] : "Choose Date", () => _selectDate(context)),
+                    _buildListTile(Icons.date_range, selectedMonth != null ? "${selectedMonth!.month}/${selectedMonth!.year}" : "Choose Month", () => _selectMonth(context)),
+                    _buildListTile(Icons.calendar_today, selectedYear != null ? "${selectedYear!.year}" : "Choose Year", () => _selectYear(context)),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 60),
+                      child: ListTile(
+                        leading: const Icon(Icons.logout, color: Colors.red),
+                        title: const Text("Log Out", style: TextStyle(color: Colors.red)),
+                        onTap: () => _logout(context),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

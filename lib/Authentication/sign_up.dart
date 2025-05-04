@@ -84,9 +84,9 @@ class _MyFormState extends State<MyForm> {
             child: Container(
               height: MediaQuery.of(context).size.height - kToolbarHeight - 100,
               padding: const EdgeInsets.all(30),
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                   gradient: LinearGradient(
-                      colors: [Color(0xFF5efce8), Color(0xFF736efe)],
+                      colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary],
                       begin: Alignment.bottomLeft,
                       end: Alignment.topRight),
                   borderRadius: BorderRadius.only(
@@ -105,16 +105,17 @@ class _MyFormState extends State<MyForm> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.inversePrimary,
                               borderRadius:
                               BorderRadius.circular(20),
                             ),
                             child: TextFormField(
+                              cursorColor: Colors.blue,
                               controller: _userNameController,
                               validator: (value) => value!.isEmpty ? 'Enter a username' : null,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 labelText: 'Name',
-                                labelStyle: TextStyle(color: Colors.black),
+                                labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
                                 border: InputBorder.none,
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: 10, horizontal: 20),
@@ -126,16 +127,17 @@ class _MyFormState extends State<MyForm> {
                           ),
                           Container(
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.inversePrimary,
                               borderRadius:
                               BorderRadius.circular(20),
                             ),
                             child: TextFormField(
+                              cursorColor: Colors.blue,
                               controller: _emailController,
                               validator: (value) => value!.isEmpty ? 'Enter a valid email' : null,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 labelText: 'Email',
-                                labelStyle: TextStyle(color: Colors.black),
+                                labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
                                 border: InputBorder.none,
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: 10, horizontal: 20),
@@ -147,17 +149,18 @@ class _MyFormState extends State<MyForm> {
                           ),
                           Container(
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.inversePrimary,
                               borderRadius:
                               BorderRadius.circular(20),
                             ),
                             child: TextFormField(
+                              cursorColor: Colors.blue,
                               controller: _passwordController,
                               validator: (value) => value!.length < 6 ? 'Password must be at least 6 characters' : null,
                               obscureText: _obscureText,
                               decoration: InputDecoration(
                                 labelText: 'Password',
-                                labelStyle: const TextStyle(color: Colors.black),
+                                labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
                                 border: InputBorder.none,
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 10, horizontal: 20),
@@ -179,15 +182,16 @@ class _MyFormState extends State<MyForm> {
                             children: [
                               Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: Theme.of(context).colorScheme.inversePrimary,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: TextFormField(
+                                  cursorColor: Colors.blue,
                                   controller: _confirmPasswordController,
                                   obscureText: _obscureText,
                                   decoration: InputDecoration(
                                     labelText: 'Confirm Password',
-                                    labelStyle: const TextStyle(color: Colors.black),
+                                    labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
                                     border: InputBorder.none,
                                     contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                                     suffixIcon: IconButton(
@@ -216,10 +220,10 @@ class _MyFormState extends State<MyForm> {
                             ],
                           ),
                           const SizedBox(
-                            height: 15,
+                            height: 20,
                           ),
                           Container(
-                            height: 70,
+                            height: 60,
                             width: double.infinity,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
@@ -243,7 +247,7 @@ class _MyFormState extends State<MyForm> {
                                 child: Container(
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: Theme.of(context).colorScheme.inversePrimary,
                                     shape: BoxShape.circle,
                                     boxShadow: [
                                       BoxShadow(
@@ -262,7 +266,7 @@ class _MyFormState extends State<MyForm> {
                                 child: Container(
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: Theme.of(context).colorScheme.inversePrimary,
                                     shape: BoxShape.circle,
                                     boxShadow: [
                                       BoxShadow(
@@ -309,7 +313,7 @@ class _MyFormState extends State<MyForm> {
                           ),
                           const SizedBox(height: 20),
                           Image.asset(
-                            "assets/logowhite2.png",
+                            "assets/dual-Logo-white.png",
                             height: 60,
                             width: 150,
                           )

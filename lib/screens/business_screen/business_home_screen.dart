@@ -163,7 +163,7 @@ class _DropdownExampleState extends State<DropdownExample> {
       drawer: B_DrawerScreen(onPaymentMethodChanged: handlePaymentMethodChange),
       appBar: customAppBar(onAccountChanged: handleAccountChange, currentAccount: currentAccount,),
       body: Container(
-        color: Color(0xFFF5F5F5),
+        color: Theme.of(context).colorScheme.background,
         child: Column(
           children: [
             Container(
@@ -171,8 +171,8 @@ class _DropdownExampleState extends State<DropdownExample> {
               padding: const EdgeInsets.all(20),
               height: 212,
               decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF5efce8), Color(0xFF736efe)],
+                  gradient: LinearGradient(
+                    colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary],
                     begin: Alignment.bottomLeft,
                     end: Alignment.topRight,
                   ),
@@ -190,7 +190,7 @@ class _DropdownExampleState extends State<DropdownExample> {
                   ),
                   SizedBox(height: 8,),
                   Center(
-                    child: Text("Balance",
+                    child: Text("BALANCE",
                       style: TextStyle(color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -365,12 +365,12 @@ class _DropdownExampleState extends State<DropdownExample> {
                           );
                         },
                         style: TextButton.styleFrom(
-                            backgroundColor: Colors.white
+                            backgroundColor: Theme.of(context).colorScheme.tertiary
                         ),
-                        child: const Text(
+                        child: Text(
                           "Credits",
                           style: TextStyle(
-                            color: Colors.black54,
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
                           ),
@@ -384,12 +384,12 @@ class _DropdownExampleState extends State<DropdownExample> {
                           );
                         },
                         style: TextButton.styleFrom(
-                          backgroundColor: Colors.white,
+                            backgroundColor: Theme.of(context).colorScheme.tertiary
                         ),
-                        child: const Text(
+                        child: Text(
                           "Debits",
                           style: TextStyle(
-                            color: Colors.black54,
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
                           ),
@@ -417,7 +417,7 @@ class _DropdownExampleState extends State<DropdownExample> {
                 onPressed: () {
                   AddDebitDialog(context);
                 },
-                backgroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.tertiary,
                 shape: const CircleBorder(),
                 child: const Icon(
                   Icons.remove,
@@ -431,7 +431,7 @@ class _DropdownExampleState extends State<DropdownExample> {
                 onPressed: () {
                   AddCreditDialog(context);
                 },
-                backgroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.tertiary,
                 shape: const CircleBorder(),
                 child: const Icon(
                   Icons.add,

@@ -63,19 +63,19 @@ class creditPieChart extends StatelessWidget {
         });
 
         return Container(
-          color: const Color(0xFFECECEC),
+          color: Theme.of(context).colorScheme.background,
           width: double.infinity,
           padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(height: 30),
-              const Text(
+              Text(
                 'Credit Pie Chart',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 100),
@@ -90,7 +90,7 @@ class creditPieChart extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 100),
-              _buildLegend(legend),
+              _buildLegend(context,legend),
             ],
           ),
         );
@@ -98,7 +98,7 @@ class creditPieChart extends StatelessWidget {
     );
   }
 
-  Widget _buildLegend(List<Map<String, dynamic>> legends) {
+  Widget _buildLegend(BuildContext context,List<Map<String, dynamic>> legends) {
     return Wrap(
       alignment: WrapAlignment.center,
       spacing: 30,
@@ -118,7 +118,7 @@ class creditPieChart extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               legend["label"],
-              style: const TextStyle(fontSize: 14, color: Colors.black),
+              style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface),
             ),
           ],
         );

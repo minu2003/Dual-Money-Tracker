@@ -74,7 +74,7 @@ class _CreditDebitScreenState extends State<credit_debit> with SingleTickerProvi
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFFECECEC),
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -82,7 +82,7 @@ class _CreditDebitScreenState extends State<credit_debit> with SingleTickerProvi
             Padding(
               padding: const EdgeInsets.only(right: 50),
               child: Image.asset(
-                "assets/LogoBusiness.png",
+                "assets/dualLogoBusiness.png",
                 height: 50,
               ),
             ),
@@ -129,7 +129,7 @@ class _CreditDebitScreenState extends State<credit_debit> with SingleTickerProvi
                 onPressed: () {
                   AddDebitDialog(context);
                 },
-                backgroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.inversePrimary,
                 shape: const CircleBorder(),
                 child: const Icon(
                   Icons.remove,
@@ -143,7 +143,7 @@ class _CreditDebitScreenState extends State<credit_debit> with SingleTickerProvi
                 onPressed: () {
                   AddCreditDialog(context);
                 },
-                backgroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.inversePrimary,
                 shape: const CircleBorder(),
                 child: const Icon(
                   Icons.add,
@@ -170,29 +170,34 @@ class _CreditDebitScreenState extends State<credit_debit> with SingleTickerProvi
         SizedBox(height: 10),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: Row(
-            children: categories.map((category) {
-              return GestureDetector(
-                onTap: () => onCategoryTap(category["label"]),
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 5),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: selectedCategory == category["label"]
-                        ? Colors.blueAccent
-                        : Colors.grey[200],
-                    borderRadius: BorderRadius.circular(20),
+          child: Container(
+            margin: EdgeInsets.only(bottom: 10),
+            child: Row(
+              children: categories.map((category) {
+                return GestureDetector(
+                  onTap: () => onCategoryTap(category["label"]),
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 5),
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: selectedCategory == category["label"]
+                          ? Colors.blueAccent
+                          : Theme.of(context).brightness == Brightness.dark
+                          ? Colors.black
+                          : Colors.grey[300],
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(category["icon"], size: 20, color: Colors.white),
+                        SizedBox(width: 5),
+                        Text(category["label"], style: TextStyle(color: Colors.white)),
+                      ],
+                    ),
                   ),
-                  child: Row(
-                    children: [
-                      Icon(category["icon"], size: 20, color: Colors.white),
-                      SizedBox(width: 5),
-                      Text(category["label"], style: TextStyle(color: Colors.white)),
-                    ],
-                  ),
-                ),
-              );
-            }).toList(),
+                );
+              }).toList(),
+            ),
           ),
         ),
         Expanded(
@@ -246,7 +251,7 @@ class _CreditDebitScreenState extends State<credit_debit> with SingleTickerProvi
                     margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                     padding: EdgeInsets.all(15),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.tertiary,
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
@@ -306,10 +311,29 @@ class _CreditDebitScreenState extends State<credit_debit> with SingleTickerProvi
                                 categoryList: type == 'credit' ? credit : debit,
                               );
                             } else if (value == 'delete') {
-                              _firestoreService.deleteTransaction(
-                                transactionId,
-                                selectedPaymentMethod,
-                                isBusiness: true,
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: Text('Delete Transaction'),
+                                  content: Text('Are you sure you want to delete this transaction?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text("Cancel",style: TextStyle(color: Colors.blue)),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        _firestoreService.deleteTransaction(
+                                          transactionId,
+                                          selectedPaymentMethod,
+                                          isBusiness: true,
+                                        );
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("Delete", style: TextStyle(color: Colors.red)),
+                                    ),
+                                  ],
+                                ),
                               );
                             }
                           },
@@ -319,7 +343,7 @@ class _CreditDebitScreenState extends State<credit_debit> with SingleTickerProvi
                                 value: 'edit',
                                 child: Row(
                                   children: [
-                                    Icon(Icons.edit, color: Colors.black54, size: 20,),
+                                    Icon(Icons.edit, color: Theme.of(context).colorScheme.onSurface, size: 20,),
                                     SizedBox(width: 8,),
                                     Text('Edit'),
                                   ],
@@ -329,7 +353,7 @@ class _CreditDebitScreenState extends State<credit_debit> with SingleTickerProvi
                                 value: 'delete',
                                 child: Row(
                                   children: [
-                                    Icon(Icons.delete, color: Colors.black54, size: 20,),
+                                    Icon(Icons.delete, color: Theme.of(context).colorScheme.onSurface, size: 20,),
                                     SizedBox(width: 8,),
                                     Text('Delete'),
                                   ],

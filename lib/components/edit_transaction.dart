@@ -58,6 +58,7 @@ void showEditTransactionDialog(
             onPressed: () {
               Navigator.pop(context);
             },
+            style: TextButton.styleFrom(foregroundColor: Colors.blue),
             child: Text('Cancel'),
           ),
           TextButton(
@@ -77,6 +78,7 @@ void showEditTransactionDialog(
               );
               Navigator.pop(context);
             },
+            style: TextButton.styleFrom(foregroundColor: Colors.blue),
             child: Text('Save'),
           ),
         ],
@@ -141,6 +143,7 @@ void businessEditTransactionDialog(
             onPressed: () {
               Navigator.pop(context);
             },
+            style: TextButton.styleFrom(foregroundColor: Colors.blue),
             child: Text('Cancel'),
           ),
           TextButton(
@@ -160,6 +163,7 @@ void businessEditTransactionDialog(
               );
               Navigator.pop(context);
             },
+            style: TextButton.styleFrom(foregroundColor: Colors.blue),
             child: Text('Save'),
           ),
         ],
