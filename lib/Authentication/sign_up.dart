@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:money_app/Authentication/sign_in.dart';
 
+import '../screens/home_wrapper.dart';
+
 class MyForm extends StatefulWidget {
   const MyForm({super.key});
 
@@ -54,7 +56,7 @@ class _MyFormState extends State<MyForm> {
         );
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const login()),
+          MaterialPageRoute(builder: (context) => const HomeWrapper()),
         );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
