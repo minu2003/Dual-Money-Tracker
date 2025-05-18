@@ -97,7 +97,7 @@ class _loginState extends State<login> {
                               controller: _emailController,
                               decoration: InputDecoration(
                                 labelText: 'Email',
-                                labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
+                                labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
                                 border: InputBorder.none,
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: 10, horizontal: 20),
@@ -119,7 +119,7 @@ class _loginState extends State<login> {
                               obscureText: _obscureText,
                               decoration: InputDecoration(
                                 labelText: 'Password',
-                                labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
+                                labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
                                 border: InputBorder.none,
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 10, horizontal: 20),

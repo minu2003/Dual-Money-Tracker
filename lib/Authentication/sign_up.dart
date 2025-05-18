@@ -115,7 +115,7 @@ class _MyFormState extends State<MyForm> {
                               validator: (value) => value!.isEmpty ? 'Enter a username' : null,
                               decoration: InputDecoration(
                                 labelText: 'Name',
-                                labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
+                                labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
                                 border: InputBorder.none,
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: 10, horizontal: 20),
@@ -137,7 +137,7 @@ class _MyFormState extends State<MyForm> {
                               validator: (value) => value!.isEmpty ? 'Enter a valid email' : null,
                               decoration: InputDecoration(
                                 labelText: 'Email',
-                                labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
+                                labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
                                 border: InputBorder.none,
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: 10, horizontal: 20),
@@ -160,7 +160,7 @@ class _MyFormState extends State<MyForm> {
                               obscureText: _obscureText,
                               decoration: InputDecoration(
                                 labelText: 'Password',
-                                labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
+                                labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
                                 border: InputBorder.none,
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 10, horizontal: 20),
@@ -191,7 +191,7 @@ class _MyFormState extends State<MyForm> {
                                   obscureText: _obscureText,
                                   decoration: InputDecoration(
                                     labelText: 'Confirm Password',
-                                    labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
+                                    labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
                                     border: InputBorder.none,
                                     contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                                     suffixIcon: IconButton(

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class TransactionPeriodProvider with ChangeNotifier {
   DateTime? _selectedDate;
   DateTime? _selectedMonth = DateTime(DateTime.now().year, DateTime.now().month);
-  DateTime? _selectedYear;
+  DateTime? _selectedYear = DateTime(DateTime.now().year);
 
   DateTime? get selectedDate => _selectedDate;
   DateTime? get selectedMonth => _selectedMonth;

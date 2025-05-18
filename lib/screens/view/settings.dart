@@ -52,16 +52,15 @@ class _SettingsState extends State<Settings> {
     String paymentMethod = 'Cash';
 
     try {
-      final snapshot = await _firestoreService
+      // Personal Transactions
+      final personalSnapshot = await _firestoreService
           .getTransactions(paymentMethod, selectedDate, selectedMonth, selectedYear)
           .first;
 
       double totalIncome = 0.0;
       double totalExpense = 0.0;
-      double totalCredit = 0.0;
-      double totalDebit = 0.0;
 
-      for (var doc in snapshot.docs) {
+      for (var doc in personalSnapshot.docs) {
         final data = doc.data() as Map<String, dynamic>;
         double amount = (data['amount'] ?? 0.0).toDouble();
 
@@ -69,7 +68,22 @@ class _SettingsState extends State<Settings> {
           totalIncome += amount;
         } else if (data['type'] == 'expense') {
           totalExpense += amount;
-        } else if (data['type'] == 'credit') {
+        }
+      }
+
+      // Business Transactions
+      final businessSnapshot = await _firestoreService
+          .getTransactions(paymentMethod, selectedDate, selectedMonth, selectedYear, isBusiness: true)
+          .first;
+
+      double totalCredit = 0.0;
+      double totalDebit = 0.0;
+
+      for (var doc in businessSnapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>;
+        double amount = (data['amount'] ?? 0.0).toDouble();
+
+        if (data['type'] == 'credit') {
           totalCredit += amount;
         } else if (data['type'] == 'debit') {
           totalDebit += amount;
@@ -96,11 +110,13 @@ Higher: $businessHighlight
 ''';
 
       print(notificationMessage);
+      // Add local notification or email logic here later
 
     } catch (e) {
       print('Failed to fetch $period summary: $e');
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
