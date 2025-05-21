@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:money_app/Authentication/sign_in.dart';
 
 import '../screens/home_wrapper.dart';
+import 'Google_Facebook_auth.dart';
 
 class MyForm extends StatefulWidget {
   const MyForm({super.key});
@@ -85,7 +86,7 @@ class _MyFormState extends State<MyForm> {
             key: _formKey,
             child: Container(
               height: MediaQuery.of(context).size.height - kToolbarHeight - 100,
-              padding: const EdgeInsets.all(30),
+              padding: const EdgeInsets.only(left: 30, right: 30, top: 30),
               decoration: BoxDecoration(
                   gradient: LinearGradient(
                       colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary],
@@ -246,6 +247,19 @@ class _MyFormState extends State<MyForm> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               GestureDetector(
+                                onTap: () async {
+                                  UserCredential? user = await signInWithGoogle();
+                                  if (user != null) {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => const HomeWrapper()),
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text("Google Sign-In failed")),
+                                    );
+                                  }
+                                },
                                 child: Container(
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
@@ -264,7 +278,32 @@ class _MyFormState extends State<MyForm> {
                               ),
                               const SizedBox(width: 20),
                               GestureDetector(
-                                onTap: (){},
+                                onTap: () async {
+                                  UserCredential? user = await signInWithFacebook();
+                                  if (user != null) {
+                                    // Save additional Facebook user info if needed
+                                    final currentUser = user.user;
+                                    if (currentUser != null) {
+                                      await FirebaseFirestore.instance.collection('users').doc(currentUser.uid).set({
+                                        'uid': currentUser.uid,
+                                        'displayName': currentUser.displayName,
+                                        'email': currentUser.email,
+                                        'photoURL': currentUser.photoURL,
+                                        'provider': 'facebook',
+                                        'createdAt': FieldValue.serverTimestamp(),
+                                      }, SetOptions(merge: true));
+                                    }
+
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => const HomeWrapper()),
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text("Facebook Sign-In failed")),
+                                    );
+                                  }
+                                },
                                 child: Container(
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(

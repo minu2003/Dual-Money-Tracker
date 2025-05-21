@@ -30,16 +30,17 @@ class _DrawerScreenState extends State<DrawerScreen> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
       builder: (context, child) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: Theme.of(context).colorScheme.copyWith(
               primary: Theme.of(context).colorScheme.secondary,
               onPrimary: Colors.white,
-              onSurface: Colors.black,
+              onSurface: isDark ? Colors.white : Colors.black,
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
+                foregroundColor: isDark ? Colors.white : Colors.black,
               ),
             ),
           ),

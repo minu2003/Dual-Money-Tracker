@@ -165,9 +165,9 @@ class _DropdownExampleState extends State<DropdownExample> {
         child: Column(
           children: [
             Container(
-              margin: const EdgeInsets.only(top: 20, right: 21, left: 21),
+              margin: const EdgeInsets.only(top: 24, right: 21, left: 21,),
               padding: const EdgeInsets.all(20),
-              height: 212,
+              height: 207,
               decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary],
@@ -186,7 +186,7 @@ class _DropdownExampleState extends State<DropdownExample> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8,),
+                  SizedBox(height: 7,),
                   Center(
                     child: Text("BALANCE",
                       style: TextStyle(color: Colors.white,
@@ -229,116 +229,113 @@ class _DropdownExampleState extends State<DropdownExample> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 10,),
-                  Padding(
-                    padding: EdgeInsets.all(7),
-                    child: Row(
-                      children: [
-                        Column(
-                          children: [
-                            CircleAvatar(
-                              radius: 19.0,
-                              child: Icon(
-                                Icons.arrow_downward,
-                                color: Colors.red,
-                                size: 24.0,
+                  SizedBox(height: 20,),
+                  Row(
+                    children: [
+                      Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 19.0,
+                            child: Icon(
+                              Icons.arrow_downward,
+                              color: Colors.red,
+                              size: 24.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 5,),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text("Expenses",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(width: 5,),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text("Expenses",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold
-                                  ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                totalExpenses.toStringAsFixed(0),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    height: 1.2,
+                                    fontWeight: FontWeight.bold
                                 ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  totalExpenses.toStringAsFixed(0),
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      height: 1.2,
-                                      fontWeight: FontWeight.bold
-                                  ),
-                                ),
-                                Text(".00",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Spacer(),
-                        Column(
-                          children: [
-                            CircleAvatar(
-                              radius: 18.0,
-                              child: Icon(
-                                Icons.arrow_upward,
-                                color: Colors.green,
-                                size: 24.0,
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(width: 5,),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text("Income",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold
-                                  ),
+                              Text(".00",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold
                                 ),
-                              ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 18.0,
+                            child: Icon(
+                              Icons.arrow_upward,
+                              color: Colors.green,
+                              size: 24.0,
                             ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  totalIncome.toStringAsFixed(0),
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      height: 1.2,
-                                      fontWeight: FontWeight.bold
-                                  ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 5,),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text("Income",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold
                                 ),
-                                Text(".00",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold
-                                  ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                totalIncome.toStringAsFixed(0),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    height: 1.2,
+                                    fontWeight: FontWeight.bold
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                              ),
+                              Text(".00",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
                   )
                 ],
               ),

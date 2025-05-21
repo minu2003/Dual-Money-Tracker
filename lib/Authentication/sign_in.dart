@@ -5,6 +5,7 @@ import 'package:money_app/Authentication/sign_up.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../screens/view/home_screen.dart';
+import 'Google_Facebook_auth.dart';
 
 class login extends StatefulWidget {
   const login({super.key});
@@ -177,7 +178,19 @@ class _loginState extends State<login> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               GestureDetector(
-                                onTap: (){},
+                                onTap: () async {
+                                  final user = await signInWithGoogle();
+                                  if (user != null) {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => const HomeWrapper()),
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('Google Sign-In failed')),
+                                    );
+                                  }
+                                },
                                 child: Container(
                                   padding: EdgeInsets.all(10),
                                   decoration: BoxDecoration(
@@ -196,7 +209,19 @@ class _loginState extends State<login> {
                               ),
                               const SizedBox(width: 20),
                               GestureDetector(
-                                onTap: (){},
+                                onTap: () async {
+                                  final user = await signInWithFacebook();
+                                  if (user != null) {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => const HomeWrapper()),
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('Facebook Sign-In failed')),
+                                    );
+                                  }
+                                },
                                 child: Container(
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(

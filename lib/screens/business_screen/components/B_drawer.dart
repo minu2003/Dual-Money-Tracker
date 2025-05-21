@@ -167,7 +167,7 @@ class _DrawerScreenState extends State<B_DrawerScreen> {
               DrawerHeader(
                 child: Column(
                   children: [
-                    const CircleAvatar(radius: 40, backgroundColor: Colors.yellow, child: Icon(Icons.person, size: 40)),
+                    const CircleAvatar(radius: 40, backgroundColor: Colors.yellow, child: Icon(Icons.person, size: 40, color: Colors.black,)),
                     const SizedBox(height: 3),
                     const Text("Welcome!"),
                     const SizedBox(height: 3),

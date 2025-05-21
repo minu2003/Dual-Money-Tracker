@@ -331,7 +331,7 @@ class _income_expenseState extends State<income_expense> with SingleTickerProvid
                                         _firestoreService.deleteTransaction(
                                           transactionId,
                                           selectedPaymentMethod,
-                                          isBusiness: true,
+                                            isBusiness: currentAccount == 'business',
                                         );
                                         Navigator.pop(context);
                                       },

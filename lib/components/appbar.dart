@@ -14,27 +14,29 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
 
-    return AppBar(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      iconTheme: IconThemeData(
-        color: Theme.of(context).colorScheme.onSurface,
-      ),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(width: 5),
-          Image.asset(
-            "assets/dualLogo.png",
-            height: 50,
+    return Container(
+      margin: EdgeInsets.only(top: 10),
+      child: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        iconTheme: IconThemeData(
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              "assets/dualLogo.png",
+              height: 50,
+            ),
+          ],
+        ),
+        actions: [
+          AccountSwitcher(
+            onAccountChanged: onAccountChanged,
+            initialValue: currentAccount,
           ),
         ],
       ),
-      actions: [
-        AccountSwitcher(
-          onAccountChanged: onAccountChanged,
-          initialValue: currentAccount,
-        ),
-      ],
     );
   }
 

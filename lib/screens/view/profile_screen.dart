@@ -80,7 +80,6 @@ class _edit_profileState extends State<edit_profile> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(width: 5),
             Image.asset(
               "assets/dualLogo.png",
               height: 50,
